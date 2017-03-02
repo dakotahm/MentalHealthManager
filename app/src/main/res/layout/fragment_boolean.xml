@@ -1,0 +1,30 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.boson.dakotahmoore.mentalhealthmanager.BooleanFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/DataNameBoolean"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Name of Log" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/DataNameBoolean"
+        android:id="@+id/Description"
+        android:paddingStart="5dp"/>
+
+    <Button
+        android:text="Log"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/DataNameBoolean"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/LogBoolean" />
+
+</RelativeLayout>

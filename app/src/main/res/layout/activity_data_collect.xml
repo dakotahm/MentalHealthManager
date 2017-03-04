@@ -29,18 +29,31 @@
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
+            <include layout="@layout/content_data_collect" />
+
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_data_collect" />
-
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/AddActivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@drawable/editdata"
+        app:backgroundTint="@android:color/holo_green_dark"
+        app:layout_anchor="@+id/app_bar"
+        app:layout_anchorGravity="bottom|center_horizontal"
+        android:layout_gravity="center_vertical|center_horizontal" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/DisplayActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@drawable/displaygraphs"
+        app:backgroundTint="@android:color/holo_green_dark"
+        app:layout_anchorGravity="bottom|left"
+        android:layout_gravity="center_vertical|right"
+        app:layout_anchor="@+id/app_bar" />
 
 </android.support.design.widget.CoordinatorLayout>

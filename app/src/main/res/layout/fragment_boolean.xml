@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context="com.boson.dakotahmoore.mentalhealthmanager.BooleanFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!--  Update blank fragment layout -->
     <TextView
         android:id="@+id/DataNameBoolean"
         android:layout_width="match_parent"

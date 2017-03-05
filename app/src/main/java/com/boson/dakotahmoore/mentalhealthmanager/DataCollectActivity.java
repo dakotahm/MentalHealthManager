@@ -3,14 +3,22 @@ package com.boson.dakotahmoore.mentalhealthmanager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
+
 
 public class DataCollectActivity extends AppCompatActivity {
 
+    //Get id of Listview for fragments and initialize the manager
+    LinearLayout fragmentList;
+   FragmentManager fragManager=getSupportFragmentManager();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,6 +26,7 @@ public class DataCollectActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        fragmentList=(LinearLayout) findViewById(R.id.CollectDataList);
         FloatingActionButton addActivity = (FloatingActionButton) findViewById(R.id.AddActivity);
         addActivity.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,6 +54,14 @@ public class DataCollectActivity extends AppCompatActivity {
             }
         });
 
+
+        //Austin this is how you add fragments to the view
+        //TODO: make this process dynamic from a query
+        FragmentTransaction fragmentTransaction = fragManager.beginTransaction();
+        Fragment newSlider=new SliderFragment();
+        fragmentTransaction.add(fragmentList.getId(),newSlider);
+        //TODO:This is an example to help you out but it currently fails on commit
+//        fragmentTransaction.commit();
     }
 
     @Override

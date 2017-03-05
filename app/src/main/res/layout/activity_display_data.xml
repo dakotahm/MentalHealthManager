@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.boson.dakotahmoore.mentalhealthmanager.DataCollectActivity">
+    tools:context="com.boson.dakotahmoore.mentalhealthmanager.DisplayDataActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -29,10 +29,10 @@
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-            <include layout="@layout/content_data_collect" />
-
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_display_data" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/AddActivity"

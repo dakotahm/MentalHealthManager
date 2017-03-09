@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,6 +31,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -160,7 +162,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+        if (!TextUtils.isEmpty(password) && !isPasswordValid(password, email)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
@@ -171,7 +173,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
+        } else if (!isEmailValid(email, password)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
@@ -190,13 +192,30 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    private boolean isEmailValid(String email) {
+    private boolean isEmailValid(String email,String password) {
         //: Replace this with your own logic
+        //String requestURL, HashMap<String, String> postDataParams
+        HashMap<String, String> postDataParams = new HashMap<String, String>();
+        String requestURL = "http://mhm.bri.land/checklogin.php";
+
+        postDataParams.put("username",email);
+        postDataParams.put("password",password);
+        Log.d("debugging","isEmailValid");
+        Log.d("json request to server",Glue.performPostCall(requestURL, postDataParams));
+
         return email.contains("@");
     }
 
-    private boolean isPasswordValid(String password) {
+    private boolean isPasswordValid(String password, String email) {
         //: Replace this with your own logic
+        HashMap<String, String> postDataParams = new HashMap<String, String>();
+        String requestURL = "http://mhm.bri.land/checklogin.php";
+
+        postDataParams.put("username",email);
+        postDataParams.put("password",password);
+        Log.d("debugging","ispasswordvalid");
+        Log.d("json request to server",Glue.performPostCall(requestURL, postDataParams));
+
         return password.length() > 4;
     }
 

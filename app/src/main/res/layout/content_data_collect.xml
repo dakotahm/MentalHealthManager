@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    app:layout_collapseParallaxMultiplier="1.0"
     tools:context="com.boson.dakotahmoore.mentalhealthmanager.DataCollectActivity"
     tools:showIn="@layout/activity_data_collect">
 

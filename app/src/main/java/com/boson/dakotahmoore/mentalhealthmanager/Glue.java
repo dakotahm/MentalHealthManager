@@ -4,6 +4,8 @@ package com.boson.dakotahmoore.mentalhealthmanager;
  * Created by Austin on 3/8/2017.
  */
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
@@ -23,7 +25,7 @@ public class Glue
     //Pass in url and hashmap of request, get back json string
     static public String performPostCall(String requestURL, HashMap<String, String> postDataParams)
     {
-
+        Log.d("debugging","in performPostCall");
         URL url;
         String response = "";
         try {
@@ -55,7 +57,7 @@ public class Glue
                 }
             }
             else {
-                response="";
+                response="failure";
 
             }
         } catch (Exception e) {
@@ -67,6 +69,7 @@ public class Glue
 
     static private String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException
     {
+        Log.d("debugging","in getPostDataString");
         StringBuilder result = new StringBuilder();
         boolean first = true;
         for(Map.Entry<String, String> entry : params.entrySet()){
@@ -82,4 +85,6 @@ public class Glue
 
         return result.toString();
     }
+
+
 }

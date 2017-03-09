@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 
 
 public class DataCollectActivity extends AppCompatActivity {
-    private boolean firstrun = true;
+    static private boolean firstrun = true;
 
     //Get id of Listview for fragments and initialize the manager
     LinearLayout fragmentList;

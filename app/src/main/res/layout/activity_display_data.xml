@@ -32,8 +32,6 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_display_data" />
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/AddActivity"
         android:layout_width="wrap_content"

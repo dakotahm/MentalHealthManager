@@ -1,5 +1,6 @@
 package com.boson.dakotahmoore.mentalhealthmanager;
 
+import android.os.Bundle;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -48,14 +49,7 @@ public class SliderFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        logActivity=(Button) getView().findViewById(R.id.button);
-        logActivity.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                LogOptionsDialog dLog=new LogOptionsDialog(c);
-                dLog.show();
-            }
-        });
+
     }
 
 
@@ -63,7 +57,16 @@ public class SliderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_slider, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_slider, container, false);
+        logActivity=(Button) rootView.findViewById(R.id.button);
+        logActivity.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                LogOptionsDialog dLog=new LogOptionsDialog(c);
+                dLog.show();
+            }
+        });
+        return rootView;
     }
 
     // : Rename method, update argument and hook method into UI event
@@ -89,8 +92,6 @@ public class SliderFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-
-
 
     public interface OnFragmentInteractionListener {
         // : Update argument type and name

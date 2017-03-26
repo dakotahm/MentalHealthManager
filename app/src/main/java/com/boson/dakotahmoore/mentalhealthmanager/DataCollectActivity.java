@@ -1,6 +1,7 @@
 package com.boson.dakotahmoore.mentalhealthmanager;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,12 +17,13 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 
 
-public class DataCollectActivity extends AppCompatActivity {
+public class DataCollectActivity extends AppCompatActivity implements SliderFragment.OnFragmentInteractionListener {
     static private boolean firstrun = true;
 
     //Get id of Listview for fragments and initialize the manager
     LinearLayout fragmentList;
-    FragmentManager fragManager=getSupportFragmentManager();
+    FragmentManager fragManager = getSupportFragmentManager();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +61,14 @@ public class DataCollectActivity extends AppCompatActivity {
             }
         });
 
+        //Jump to login when opening app
+//        if(firstrun)
+//        {
+//            firstrun = false;
+//            Log.d("debugging","loading login activity");
+//            Intent myIntent = new Intent(this, LoginActivity.class);
+//            startActivity(myIntent);
+//        }
 
         //Austin this is how you add fragments to the view
         //TODO: make this process dynamic from a query
@@ -66,16 +76,8 @@ public class DataCollectActivity extends AppCompatActivity {
         Fragment newSlider=new SliderFragment();
         fragmentTransaction.add(fragmentList.getId(),newSlider);
         //TODO:This is an example to help you out but it currently fails on commit
-        //fragmentTransaction.commit();
+        fragmentTransaction.commit();
 
-        //Jump to login when opening app
-        if(firstrun)
-        {
-            firstrun = false;
-            Log.d("debugging","loading login activity");
-            Intent myIntent = new Intent(this, LoginActivity.class);
-            startActivity(myIntent);
-        }
 
     }
 
@@ -98,5 +100,10 @@ public class DataCollectActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }

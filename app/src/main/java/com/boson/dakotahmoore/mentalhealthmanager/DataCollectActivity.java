@@ -1,5 +1,7 @@
 package com.boson.dakotahmoore.mentalhealthmanager;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,17 +10,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
 
-public class DataCollectActivity extends AppCompatActivity {
+public class DataCollectActivity extends AppCompatActivity implements SliderFragment.OnFragmentInteractionListener {
+    static private boolean firstrun = true;
 
     //Get id of Listview for fragments and initialize the manager
     LinearLayout fragmentList;
-   FragmentManager fragManager=getSupportFragmentManager();
+    FragmentManager fragManager = getSupportFragmentManager();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,12 +32,13 @@ public class DataCollectActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         fragmentList=(LinearLayout) findViewById(R.id.CollectDataList);
+
         FloatingActionButton addActivity = (FloatingActionButton) findViewById(R.id.AddActivity);
         addActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent addActivityIntent = new Intent(DataCollectActivity.this, DataCollectActivity.class);
+                startActivity(addActivityIntent);
             }
         });
 
@@ -40,8 +46,8 @@ public class DataCollectActivity extends AppCompatActivity {
         displayActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent displayIntent = new Intent(DataCollectActivity.this, DisplayDataActivity.class);
+                startActivity(displayIntent);
             }
         });
 
@@ -49,11 +55,20 @@ public class DataCollectActivity extends AppCompatActivity {
         treatmentActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent treatmentIntent = new Intent(DataCollectActivity.this, TreatmentAidActivity.class);
+                startActivity(treatmentIntent);
+
             }
         });
 
+        //Jump to login when opening app
+//        if(firstrun)
+//        {
+//            firstrun = false;
+//            Log.d("debugging","loading login activity");
+//            Intent myIntent = new Intent(this, LoginActivity.class);
+//            startActivity(myIntent);
+//        }
 
         //Austin this is how you add fragments to the view
         //TODO: make this process dynamic from a query
@@ -61,7 +76,9 @@ public class DataCollectActivity extends AppCompatActivity {
         Fragment newSlider=new SliderFragment();
         fragmentTransaction.add(fragmentList.getId(),newSlider);
         //TODO:This is an example to help you out but it currently fails on commit
-//        fragmentTransaction.commit();
+        fragmentTransaction.commit();
+
+
     }
 
     @Override
@@ -83,5 +100,10 @@ public class DataCollectActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }

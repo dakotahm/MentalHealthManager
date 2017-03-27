@@ -67,4 +67,11 @@
         app:layout_anchor="@+id/app_bar"
         app:layout_anchorGravity="bottom|right" />
 
+    <LinearLayout
+        android:id="@+id/fragment_slider"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" />
+
 </android.support.design.widget.CoordinatorLayout>
+

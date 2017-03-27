@@ -1,5 +1,6 @@
 package com.boson.dakotahmoore.mentalhealthmanager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,8 +21,8 @@ public class TreatmentAidActivity extends AppCompatActivity {
         addActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent addActivityIntent = new Intent(TreatmentAidActivity.this, DataCollectActivity.class);
+                startActivity(addActivityIntent);
             }
         });
 
@@ -29,8 +30,8 @@ public class TreatmentAidActivity extends AppCompatActivity {
         displayActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent displayIntent = new Intent(TreatmentAidActivity.this, DisplayDataActivity.class);
+                startActivity(displayIntent);
             }
         });
 
@@ -38,8 +39,9 @@ public class TreatmentAidActivity extends AppCompatActivity {
         treatmentActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent treatmentIntent = new Intent(TreatmentAidActivity.this, TreatmentAidActivity.class);
+                startActivity(treatmentIntent);
+
             }
         });
     }

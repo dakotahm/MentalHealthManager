@@ -1,5 +1,6 @@
 package com.boson.dakotahmoore.mentalhealthmanager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,7 +11,8 @@ import android.view.View;
 public class DisplayDataActivity extends AppCompatActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_data);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -20,8 +22,8 @@ public class DisplayDataActivity extends AppCompatActivity {
         addActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent addActivityIntent = new Intent(DisplayDataActivity.this, DataCollectActivity.class);
+                startActivity(addActivityIntent);
             }
         });
 
@@ -29,8 +31,8 @@ public class DisplayDataActivity extends AppCompatActivity {
         displayActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent displayIntent = new Intent(DisplayDataActivity.this, DisplayDataActivity.class);
+                startActivity(displayIntent);
             }
         });
 
@@ -38,8 +40,9 @@ public class DisplayDataActivity extends AppCompatActivity {
         treatmentActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent treatmentIntent = new Intent(DisplayDataActivity.this, TreatmentAidActivity.class);
+                startActivity(treatmentIntent);
+
             }
         });
     }

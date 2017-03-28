@@ -2,6 +2,7 @@ package com.boson.dakotahmoore.mentalhealthmanager;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,12 +11,23 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.v4.app.FragmentActivity;
+import android.widget.ListView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.StringTokenizer;
 
 public class DisplayDataActivity extends AppCompatActivity implements LineChartFragment.OnFragmentInteractionListener {
 
+    private int userId=1;
+    private String tag;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -55,7 +67,7 @@ public class DisplayDataActivity extends AppCompatActivity implements LineChartF
         });
         FragmentTransaction fragmentTransaction = fragManager.beginTransaction();
         Fragment chart=new LineChartFragment();
-        fragmentTransaction.add(R.id.displayLinear,chart);
+        fragmentTransaction.add(R.id.placeholder,chart);
         //TODO:This is an example to help you out but it currently fails on commit
         fragmentTransaction.commit();
     }
@@ -76,4 +88,6 @@ public class DisplayDataActivity extends AppCompatActivity implements LineChartF
     public void onFragmentInteraction(Uri uri) {
 
     }
+
+
 }

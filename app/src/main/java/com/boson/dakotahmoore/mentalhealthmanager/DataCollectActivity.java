@@ -2,6 +2,7 @@ package com.boson.dakotahmoore.mentalhealthmanager;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,10 +17,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
 
 public class DataCollectActivity extends AppCompatActivity implements SliderFragment.OnFragmentInteractionListener {
     static private boolean firstrun = true;
-
+    String tag;
+    private int userId=1;
     //Get id of Listview for fragments and initialize the manager
     LinearLayout fragmentList;
     FragmentManager fragManager = getSupportFragmentManager();
@@ -102,5 +110,53 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    class GetMeasurables extends AsyncTask<Void,Void,String> {
+
+        @Override
+        protected String doInBackground(Void... params){
+            String requestURL = "http://mhm.bri.land/getMeasurables.php";
+            HashMap<String, String> postDataParams = new HashMap<String, String>();
+            postDataParams.put("user_id", String.valueOf( userId));
+            String result= Glue.performPostCall(requestURL,postDataParams);
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String Result) {
+            JSONObject mainObject = null;
+            try {
+                mainObject = new JSONObject(Result);
+                JSONArray Measurables =mainObject.getJSONArray("measurables");
+                FragmentTransaction fragmentTransaction;
+                fragmentTransaction = fragManager.beginTransaction();
+                for(int i=0;i<Measurables.length();i++){
+                    JSONObject measurable=Measurables.getJSONObject(i);
+
+                    //Get Arguments from JSON
+                    Bundle args=new Bundle();
+                    args.putInt("max",measurable.getInt("max"));
+                    args.putInt("min",measurable.getInt("min"));
+                    args.putInt("id",measurable.getInt("id"));
+                    args.putString("name",measurable.getString("name"));
+                    args.putString("type",measurable.getString("type"));
+
+                    if(measurable.getString("type")=="value"){
+                        SliderFragment newSlider = new SliderFragment();
+                        newSlider.setArguments(args);
+                        fragmentTransaction.add(fragmentList.getId(), newSlider);
+                    }else{
+                        BooleanFragment newBool = new BooleanFragment();
+                        newBool.setArguments(args);
+                        fragmentTransaction.add(fragmentList.getId(), newBool);
+                    }
+
+                }
+                fragmentTransaction.commit();
+            } catch (JSONException e) {
+                Log.d(tag, "INVALID JSON");
+            }
+        }
     }
 }

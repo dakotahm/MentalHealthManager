@@ -93,6 +93,7 @@ public class SliderFragment extends Fragment {
         mListener = null;
     }
 
+
     public interface OnFragmentInteractionListener {
         // : Update argument type and name
         void onFragmentInteraction(Uri uri);

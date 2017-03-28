@@ -25,13 +25,20 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
     FragmentManager fragManager = getSupportFragmentManager();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_collect);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        fragmentList=(LinearLayout) findViewById(R.id.CollectDataList);
+        fragmentList = (LinearLayout) findViewById(R.id.CollectDataList);
+        //Austin this is how you add fragments to the view
+        //TODO: make this process dynamic from a query
+        SliderFragment newSlider = new SliderFragment();
+        FragmentTransaction fragmentTransaction = fragManager.beginTransaction();
+        fragmentTransaction.add(fragmentList.getId(), newSlider);
+        fragmentTransaction.commit();
 
         FloatingActionButton addActivity = (FloatingActionButton) findViewById(R.id.AddActivity);
         addActivity.setOnClickListener(new View.OnClickListener() {
@@ -69,16 +76,6 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
 //            Intent myIntent = new Intent(this, LoginActivity.class);
 //            startActivity(myIntent);
 //        }
-
-        //Austin this is how you add fragments to the view
-        //TODO: make this process dynamic from a query
-        FragmentTransaction fragmentTransaction = fragManager.beginTransaction();
-        Fragment newSlider=new SliderFragment();
-        fragmentTransaction.add(fragmentList.getId(),newSlider);
-        //TODO:This is an example to help you out but it currently fails on commit
-        fragmentTransaction.commit();
-
-
     }
 
     @Override

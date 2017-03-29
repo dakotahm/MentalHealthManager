@@ -21,14 +21,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link LineChartFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link LineChartFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+/
 public class LineChartFragment extends Fragment {
     // : Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

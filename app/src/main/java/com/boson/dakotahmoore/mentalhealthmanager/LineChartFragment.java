@@ -1,6 +1,7 @@
 package com.boson.dakotahmoore.mentalhealthmanager;
 
 import android.content.Context;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,9 +17,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 
 /
@@ -33,6 +40,11 @@ public class LineChartFragment extends Fragment {
     // : Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private LineChart lineChart;
+    private SensorManager sensorManager;
+    private LineData data=new LineData();
+    private  LineDataSet datas;
+    private ArrayList<Entry> entries= new ArrayList<Entry>();
 
     private OnFragmentInteractionListener mListener;
 
@@ -62,6 +74,7 @@ public class LineChartFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         timeSpinnerValue="Month";
+        lineChart=(LineChart)getView().findViewById(R.id.LineDisplay);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -154,6 +167,8 @@ public class LineChartFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+            entries=new ArrayList<Entry>();
             return result;
         }
 

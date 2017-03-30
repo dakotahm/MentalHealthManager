@@ -33,6 +33,7 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
     FragmentManager fragManager = getSupportFragmentManager();
     DatabaseHelper mydb;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -41,14 +42,14 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mydb= new DatabaseHelper(this);
         setSupportActionBar(toolbar);
-
-        fragmentList = (LinearLayout) findViewById(R.id.CollectDataList);
-        //Austin this is how you add fragments to the view
-        //TODO: make this process dynamic from a query
-        SliderFragment newSlider = new SliderFragment();
-        FragmentTransaction fragmentTransaction = fragManager.beginTransaction();
-        fragmentTransaction.add(fragmentList.getId(), newSlider);
-        fragmentTransaction.commit();
+        new GetMeasurables().execute();
+//        fragmentList = (LinearLayout) findViewById(R.id.CollectDataList);
+//        //Austin this is how you add fragments to the view
+//        //TODO: make this process dynamic from a query
+//        SliderFragment newSlider = new SliderFragment();
+//        FragmentTransaction fragmentTransaction = fragManager.beginTransaction();
+//        fragmentTransaction.add(fragmentList.getId(), newSlider);
+//        fragmentTransaction.commit();
 
         FloatingActionButton addActivity = (FloatingActionButton) findViewById(R.id.AddActivity);
         addActivity.setOnClickListener(new View.OnClickListener() {
@@ -129,6 +130,7 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
         protected void onPostExecute(String Result) {
             JSONObject mainObject = null;
             try {
+               Log.d(tag,Result);
                 mainObject = new JSONObject(Result);
                 JSONArray Measurables =mainObject.getJSONArray("measurables");
                 FragmentTransaction fragmentTransaction;

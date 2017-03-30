@@ -200,8 +200,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         postDataParams.put("username",email);
         postDataParams.put("password",password);
-        Log.d("debugging","isEmailValid");
-        Log.d("debugging",Glue.performPostCall(requestURL, postDataParams));
+        //Log.d("debugging","isEmailValid");
+        //Log.d("debugging",Glue.performPostCall(requestURL, postDataParams));
 
         return email.contains("@");
     }
@@ -213,8 +213,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         postDataParams.put("username",email);
         postDataParams.put("password",password);
-        Log.d("debugging","ispasswordvalid");
-        Log.d("debugging",Glue.performPostCall(requestURL, postDataParams));
+        //Log.d("debugging","ispasswordvalid");
+        //Log.d("debugging",Glue.performPostCall(requestURL, postDataParams));
 
         return password.length() > 4;
     }

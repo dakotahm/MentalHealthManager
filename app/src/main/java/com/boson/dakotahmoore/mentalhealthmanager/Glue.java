@@ -1,3 +1,4 @@
+
 package com.boson.dakotahmoore.mentalhealthmanager;
 
 /**
@@ -5,6 +6,8 @@ package com.boson.dakotahmoore.mentalhealthmanager;
  */
 
 import android.util.Log;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -22,32 +25,36 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class Glue
 {
+    static String  tag;
     //Pass in url and hashmap of request, get back json string
     static public String performPostCall(String requestURL, HashMap<String, String> postDataParams)
     {
         Log.d("debugging","in performPostCall");
         URL url;
         String response = "";
+        OutputStreamWriter writer;
+       // HashMap<String,Integer> test=new HashMap<String, Integer>();
+       // test.put("user_id",1);
+        JSONObject json = new JSONObject(postDataParams);
+
         try {
             url = new URL(requestURL);
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(15000);
-            conn.setConnectTimeout(15000);
-            conn.setRequestMethod("POST");
             conn.setDoInput(true);
             conn.setDoOutput(true);
+            conn.setRequestProperty("content-type","application/json;charset=utf-8");
 
-
+            conn.connect();
             OutputStream os = conn.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(
-                    new OutputStreamWriter(os, "UTF-8"));
-            writer.write(getPostDataString(postDataParams));
-
+            writer = new OutputStreamWriter(os);
+            writer.write(json.toString());
             writer.flush();
-            writer.close();
-            os.close();
+
+
             int responseCode=conn.getResponseCode();
+            Log.d("debugging","here");
+
 
             if (responseCode == HttpsURLConnection.HTTP_OK) {
                 String line;
@@ -57,9 +64,10 @@ public class Glue
                 }
             }
             else {
-                response="failure";
-
+                response = "failure";
             }
+            writer.close();
+            os.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -82,9 +90,7 @@ public class Glue
             result.append("=");
             result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
         }
-
+        Log.d(tag,result.toString());
         return result.toString();
     }
-
-
 }

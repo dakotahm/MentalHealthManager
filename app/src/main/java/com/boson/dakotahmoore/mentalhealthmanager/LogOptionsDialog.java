@@ -65,8 +65,4 @@ public class LogOptionsDialog extends Dialog implements
         no.setOnClickListener(this);
 
     }
-
-
-
-
 }

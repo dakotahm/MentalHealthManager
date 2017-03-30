@@ -17,11 +17,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class DataCollectActivity extends AppCompatActivity implements SliderFragment.OnFragmentInteractionListener {
@@ -42,7 +49,43 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mydb= new DatabaseHelper(this);
         setSupportActionBar(toolbar);
-        new GetMeasurables().execute();
+        //new GetMeasurables().execute();
+
+        String requestURL = "http://mhm.bri.land/getMeasurables.php";
+
+        //String result= Glue.performPostCall(requestURL,postDataParams);
+
+
+        StringRequest postRequest = new StringRequest(Request.Method.POST, requestURL,
+                new Response.Listener<String>() {
+
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            String test=response.toString();
+                            int jsonResponse = new JSONObject(response).getInt("success");
+                            Log.d(tag,"The resposne was "+jsonResponse+"\n\n\n");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String>  params = new HashMap<>();
+                params.put("user_id", String.valueOf( userId));
+                return params;
+            }
+        };
+        Volley.newRequestQueue(getApplicationContext()).add(postRequest);
 //        fragmentList = (LinearLayout) findViewById(R.id.CollectDataList);
 //        //Austin this is how you add fragments to the view
 //        //TODO: make this process dynamic from a query
@@ -120,10 +163,43 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
         @Override
         protected String doInBackground(Void... params){
             String requestURL = "http://mhm.bri.land/getMeasurables.php";
-            HashMap<String, String> postDataParams = new HashMap<String, String>();
-            postDataParams.put("user_id", String.valueOf( userId));
-            String result= Glue.performPostCall(requestURL,postDataParams);
-            return result;
+
+            //String result= Glue.performPostCall(requestURL,postDataParams);
+
+            String test;
+            StringRequest postRequest = new StringRequest(Request.Method.POST, requestURL,
+                    new Response.Listener<String>() {
+
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                //test=response.toString();
+                                int jsonResponse = new JSONObject(response).getInt("success");
+                                Log.d(tag,"The resposne was "+jsonResponse+"\n\n\n");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            error.printStackTrace();
+                        }
+                    }
+            ) {
+                @Override
+                protected Map<String, String> getParams()
+                {
+                    Map<String, String>  params = new HashMap<>();
+                    params.put("user_id", String.valueOf( userId));
+                    return params;
+                }
+            };
+            Volley.newRequestQueue(getApplicationContext()).add(postRequest);
+
+
+            return postRequest.toString();
         }
 
         @Override

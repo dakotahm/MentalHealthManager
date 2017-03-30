@@ -28,7 +28,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 
-/
+
 public class LineChartFragment extends Fragment {
     // : Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

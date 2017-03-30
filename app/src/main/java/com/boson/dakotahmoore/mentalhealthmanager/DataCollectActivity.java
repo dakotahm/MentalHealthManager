@@ -31,6 +31,7 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
     //Get id of Listview for fragments and initialize the manager
     LinearLayout fragmentList;
     FragmentManager fragManager = getSupportFragmentManager();
+    DatabaseHelper mydb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -38,6 +39,7 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_collect);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mydb= new DatabaseHelper(this);
         setSupportActionBar(toolbar);
 
         fragmentList = (LinearLayout) findViewById(R.id.CollectDataList);

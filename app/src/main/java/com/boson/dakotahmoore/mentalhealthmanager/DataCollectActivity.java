@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class DataCollectActivity extends AppCompatActivity implements SliderFragment.OnFragmentInteractionListener {
+public class DataCollectActivity extends AppCompatActivity implements SliderFragment.OnFragmentInteractionListener,BooleanFragment.OnFragmentInteractionListener {
     static private boolean firstrun = true;
     String tag;
     private int userId=1;
@@ -49,6 +49,7 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mydb= new DatabaseHelper(this);
         setSupportActionBar(toolbar);
+        fragmentList = (LinearLayout) findViewById(R.id.CollectDataList);
         //new GetMeasurables().execute();
 
         String requestURL = "http://mhm.bri.land/getMeasurables.php";
@@ -63,8 +64,50 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
                     public void onResponse(String response) {
                         try {
                             String test=response.toString();
+                           // System.out.println(response);
                             int jsonResponse = new JSONObject(response).getInt("success");
                             Log.d(tag,"The resposne was "+jsonResponse+"\n\n\n");
+                            JSONObject mainObject = null;
+                            try {
+                                Log.d(tag,response);
+                                mainObject = new JSONObject(response);
+                                JSONArray Measurables =mainObject.getJSONArray("measurables");
+                                System.out.println(Measurables.toString());
+                                FragmentTransaction fragmentTransaction;
+
+                                for(int i=0;i<Measurables.length();i++){
+                                    fragmentTransaction = fragManager.beginTransaction();
+                                    JSONObject measurable=Measurables.getJSONObject(i);
+
+                                    //Get Arguments from JSON
+                                    Bundle args=new Bundle();
+
+                                    args.putInt("id",measurable.getInt("id"));
+                                    args.putString("name",measurable.getString("name"));
+                                    args.putString("type",measurable.getString("type"));
+                                    if(measurable.getString("type").equals("value")){
+                                       args.putInt("max",measurable.getInt("max"));
+                                       args.putInt("min",measurable.getInt("min"));
+                                        SliderFragment newSlider = new SliderFragment();
+                                        newSlider.setArguments(args);
+                                        System.out.println(newSlider);
+
+                                        fragmentTransaction.add(fragmentList.getId(), newSlider,"newFragment"+i);
+                                        fragmentTransaction.commit();
+                                    }else{
+                                        System.out.println("BOOLEAN");
+                                        BooleanFragment newBool = new BooleanFragment();
+                                        newBool.setArguments(args);
+                                       fragmentTransaction.add(fragmentList.getId(), newBool,"newFragment"+i);
+                                        fragmentTransaction.commit();
+                                    }
+
+                                }
+
+                            } catch (JSONException e) {
+                                Log.d(tag, "INVALID JSON");
+                            }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

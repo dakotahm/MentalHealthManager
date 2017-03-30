@@ -74,7 +74,7 @@ public class LineChartFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         timeSpinnerValue="Month";
-        lineChart=(LineChart)getView().findViewById(R.id.LineDisplay);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -85,7 +85,9 @@ public class LineChartFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_line_chart, container, false);
+       View view=inflater.inflate(R.layout.fragment_line_chart, container, false);
+
+        return view;
     }
 
     // : Rename method, update argument and hook method into UI event
@@ -104,12 +106,18 @@ public class LineChartFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        lineChart=(LineChart)getView().findViewById(R.id.LineDisplay);
+        System.out.println("HEY HERE I AM\n\n");
     }
 
     /**

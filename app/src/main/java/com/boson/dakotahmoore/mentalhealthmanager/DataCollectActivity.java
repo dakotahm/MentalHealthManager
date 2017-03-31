@@ -15,7 +15,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -37,6 +40,7 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
     private int userId=1;
     //Get id of Listview for fragments and initialize the manager
     LinearLayout fragmentList;
+    FrameLayout theHack;
     FragmentManager fragManager = getSupportFragmentManager();
     DatabaseHelper mydb;
 
@@ -50,6 +54,8 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
         mydb= new DatabaseHelper(this);
         setSupportActionBar(toolbar);
         fragmentList = (LinearLayout) findViewById(R.id.CollectDataList);
+        theHack=(FrameLayout) findViewById(R.id.HackandSlash) ;
+
         //new GetMeasurables().execute();
 
         String requestURL = "http://mhm.bri.land/getMeasurables.php";
@@ -75,9 +81,18 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
                                 System.out.println(Measurables.toString());
                                 FragmentTransaction fragmentTransaction;
 
+
+                                LinearLayout master=(LinearLayout)findViewById(R.id.MasterLinear) ;
+                                LinearLayout frags = new LinearLayout(getApplicationContext());
+                                frags.setOrientation(LinearLayout.VERTICAL);
+                                frags.setId(View.generateViewId());
                                 for(int i=0;i<Measurables.length();i++){
-                                    fragmentTransaction = fragManager.beginTransaction();
                                     JSONObject measurable=Measurables.getJSONObject(i);
+//                                    if(measurable.getString("name").equals("sleep"))
+//                                        continue;
+
+                                    fragmentTransaction = fragManager.beginTransaction();
+
 
                                     //Get Arguments from JSON
                                     Bundle args=new Bundle();
@@ -91,16 +106,24 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
                                         SliderFragment newSlider = new SliderFragment();
                                         newSlider.setArguments(args);
                                         System.out.println(newSlider);
-
-                                        fragmentTransaction.add(fragmentList.getId(), newSlider,"newFragment"+i);
+                                        if(measurable.getString("name").equals("sleep"))
+                                        {
+                                            fragmentTransaction.add(theHack.getId(), newSlider,"newFragment"+i);
+                                        }
+                                        else{
+                                        fragmentTransaction.add(fragmentList.getId(), newSlider,"newFragment"+i);}
+                                        System.out.println(measurable.getString("name"));
                                         fragmentTransaction.commit();
+
                                     }else{
                                         System.out.println("BOOLEAN");
-                                        BooleanFragment newBool = new BooleanFragment();
-                                        newBool.setArguments(args);
-                                       fragmentTransaction.add(fragmentList.getId(), newBool,"newFragment"+i);
-                                        fragmentTransaction.commit();
+                                       BooleanFragment newBool = new BooleanFragment();
+                                       newBool.setArguments(args);
+                                      fragmentTransaction.add(fragmentList.getId(), newBool,"newFragment"+i);
+                                        System.out.println(measurable.getString("name"));
+                                    fragmentTransaction.commit();
                                     }
+
 
                                 }
 

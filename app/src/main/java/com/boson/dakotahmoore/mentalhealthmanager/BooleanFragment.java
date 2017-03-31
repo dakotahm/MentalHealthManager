@@ -7,6 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 
 //TODO: implement custom dialog like in slider same TODOS apply here
@@ -15,7 +18,13 @@ public class BooleanFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    private String Name;
+    private String Value;
+    private int max;
+    private  int min;
+    private Button logActivity;
+    TextView nameText;
+    TextView valueText;
     
     private String mParam1;
     private String mParam2;
@@ -58,6 +67,7 @@ public class BooleanFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Name=getArguments().getString("name");
         return inflater.inflate(R.layout.fragment_boolean, container, false);
     }
 
@@ -77,6 +87,16 @@ public class BooleanFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        nameText=(TextView)getView().findViewById(R.id.DataNameBoolean);
+        nameText.setText(Name);
+        valueText=(TextView)getView().findViewById(R.id.Description);
+        valueText.setText("");
+
+
     }
 
     @Override

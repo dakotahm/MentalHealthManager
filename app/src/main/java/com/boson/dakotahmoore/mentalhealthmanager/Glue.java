@@ -25,6 +25,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class Glue
 {
+    static String  tag;
     //Pass in url and hashmap of request, get back json string
     static public String performPostCall(String requestURL, HashMap<String, String> postDataParams)
     {
@@ -32,6 +33,8 @@ public class Glue
         URL url;
         String response = "";
         OutputStreamWriter writer;
+       // HashMap<String,Integer> test=new HashMap<String, Integer>();
+       // test.put("user_id",1);
         JSONObject json = new JSONObject(postDataParams);
 
         try {
@@ -87,7 +90,7 @@ public class Glue
             result.append("=");
             result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
         }
-
+        Log.d(tag,result.toString());
         return result.toString();
     }
 }

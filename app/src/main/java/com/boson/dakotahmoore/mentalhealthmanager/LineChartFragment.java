@@ -1,6 +1,7 @@
 package com.boson.dakotahmoore.mentalhealthmanager;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -11,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,8 +48,13 @@ public class LineChartFragment extends Fragment {
     private LineData data=new LineData();
     private  LineDataSet datas;
     private ArrayList<Entry> entries= new ArrayList<Entry>();
-
+    private ArrayList<measurableWrapper> measurables=new ArrayList<measurableWrapper>();
+    private  ArrayList<MoodLog> Logs=new ArrayList<MoodLog>();
+    private String[] timeValues={"Day","Week","Month","Year"};
+    private Spinner timeSpinner;
+    private Spinner measurableSpinner;
     private OnFragmentInteractionListener mListener;
+    private DatabaseHelper dbHelper;
 
     public LineChartFragment() {
         // Required empty public constructor
@@ -79,6 +87,7 @@ public class LineChartFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        dbHelper=new DatabaseHelper(getContext());
     }
 
     @Override
@@ -86,7 +95,6 @@ public class LineChartFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
        View view=inflater.inflate(R.layout.fragment_line_chart, container, false);
-
         return view;
     }
 
@@ -117,7 +125,26 @@ public class LineChartFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         lineChart=(LineChart)getView().findViewById(R.id.LineDisplay);
-        System.out.println("HEY HERE I AM\n\n");
+        timeSpinner=(Spinner)getView().findViewById(R.id.Timeframe);
+        measurableSpinner=(Spinner)getView().findViewById(R.id.trackedActivity);
+
+        Cursor cursor=dbHelper.getMeasurables(userId);
+        if (cursor.moveToFirst()){
+            do{
+                //String data = cursor.getString(cursor.getColumnIndex("data"));
+                measurableWrapper measurable = new measurableWrapper(cursor.getString(1),cursor.getInt(0));
+                measurables.add(measurable);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+
+        ArrayAdapter<String> timeAdapter=new ArrayAdapter<String> (getContext(),android.R.layout.simple_spinner_item,timeValues);
+        timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        timeSpinner.setAdapter(timeAdapter);
+
+        ArrayAdapter measurableAdapter=new ArrayAdapter (getContext(),android.R.layout.simple_spinner_item, measurables);
+        measurableAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        measurableSpinner.setAdapter(measurableAdapter);
     }
 
     /**
@@ -230,6 +257,24 @@ class MoodLog{
             Id=_Id;
             Time=_Time;
         }
+        @Override
+        public String toString(){
+            return Time +"\n"+Log;
+        }
+}
 
-
+class measurableWrapper{
+    public int Id;
+    public int value;
+    public int max;
+    public int min;
+    public String name;
+    public measurableWrapper(String _name, int _Id){
+        name=_name;
+        Id=_Id;
+    }
+    @Override
+    public String toString(){
+        return name;
+    }
 }

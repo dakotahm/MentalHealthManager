@@ -55,6 +55,7 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
         setSupportActionBar(toolbar);
         fragmentList = (LinearLayout) findViewById(R.id.CollectDataList);
         theHack=(FrameLayout) findViewById(R.id.HackandSlash) ;
+        mydb=new DatabaseHelper(this);
 
         //new GetMeasurables().execute();
 
@@ -96,6 +97,19 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
 
                                     //Get Arguments from JSON
                                     Bundle args=new Bundle();
+                                    //insert into local database if its not in there
+
+                                    if(mydb.checkMeasurables(measurable.getInt("id")).getCount()==0){
+                                        if(measurable.getString("type").equals("boolean")){
+                                          boolean result= mydb.insertMeasurable(measurable.getInt("id"),measurable.getString("name"),measurable.getString("type"),-1,-1,userId);
+                                            if(result)
+                                                System.out.println("BOOLEAN INSERT FAILED");
+                                        }else{
+                                            boolean result= mydb.insertMeasurable(measurable.getInt("id"),measurable.getString("name"),measurable.getString("type"),measurable.getInt("max"),measurable.getInt("min"),userId);
+                                            if(result)
+                                                System.out.println("BOOLEAN INSERT FAILED");
+                                        }
+                                    }
 
                                     args.putInt("id",measurable.getInt("id"));
                                     args.putString("name",measurable.getString("name"));

@@ -54,6 +54,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(MIN,min);
         contentValues.put(MAX,max);
         contentValues.put(USER,user);
+
+
        long result= db.insert(MEASURABLE_TABLE,null,contentValues);
         if (result==-1)
                 return false;
@@ -86,7 +88,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Cursor checkMeasurables(int id){
         SQLiteDatabase db=this.getWritableDatabase();
-        Cursor result=db.rawQuery("SELECT * FROM "+MEASURABLE_TABLE+" WHERE ("+MEASURABLE_ID+"="+id+")",null);
+        System.out.println("SELECT * FROM "+MEASURABLE_TABLE+" WHERE "+MEASURABLE_ID+"="+id);
+        Cursor result=db.rawQuery("SELECT * FROM "+MEASURABLE_TABLE+" WHERE "+MEASURABLE_ID+"="+id,null);
         return result;
     }
 }

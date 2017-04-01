@@ -67,7 +67,7 @@ public class DisplayDataActivity extends AppCompatActivity implements LineChartF
         });
         FragmentTransaction fragmentTransaction = fragManager.beginTransaction();
         Fragment chart=new LineChartFragment();
-        fragmentTransaction.add(R.id.placeholder,chart);
+        fragmentTransaction.add(R.id.ChartPlaceholder,chart);
         //TODO:This is an example to help you out but it currently fails on commit
         fragmentTransaction.commit();
     }

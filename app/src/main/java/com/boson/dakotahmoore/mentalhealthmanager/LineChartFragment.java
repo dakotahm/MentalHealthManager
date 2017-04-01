@@ -12,8 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,7 +34,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 
 
-public class LineChartFragment extends Fragment {
+public class LineChartFragment extends Fragment  {
     // : Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -60,15 +62,7 @@ public class LineChartFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment LineChartFragment.
-     */
-    // : Rename and change types and number of parameters
+
     public static LineChartFragment newInstance(String param1, String param2) {
         LineChartFragment fragment = new LineChartFragment();
         Bundle args = new Bundle();
@@ -123,7 +117,7 @@ public class LineChartFragment extends Fragment {
         mListener = null;
     }
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState)  {
         lineChart=(LineChart)getView().findViewById(R.id.LineDisplay);
         timeSpinner=(Spinner)getView().findViewById(R.id.Timeframe);
         measurableSpinner=(Spinner)getView().findViewById(R.id.trackedActivity);
@@ -145,18 +139,36 @@ public class LineChartFragment extends Fragment {
         ArrayAdapter measurableAdapter=new ArrayAdapter (getContext(),android.R.layout.simple_spinner_item, measurables);
         measurableAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         measurableSpinner.setAdapter(measurableAdapter);
+
+       timeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+           public void onItemSelected(AdapterView<?> parent, View view,
+                                      int position, long id) {
+               System.out.println("ITEM SELECTED");
+           }
+
+           @Override
+           public void onNothingSelected(AdapterView<?> parent) {
+
+           }
+
+       });
+        measurableSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                System.out.println("ITEM SELECTED");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+
+        });
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
+
+
     public interface OnFragmentInteractionListener {
         // : Update argument type and name
         void onFragmentInteraction(Uri uri);

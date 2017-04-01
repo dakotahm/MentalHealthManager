@@ -8,7 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="225dp"
     android:fitsSystemWindows="true"
     tools:context="com.boson.dakotahmoore.mentalhealthmanager.DisplayDataActivity">
 
@@ -69,27 +69,29 @@
         android:layout_gravity="center_vertical|left"
         app:layout_anchor="@+id/app_bar"
         app:layout_anchorGravity="bottom|right" />
-    <LinearLayout
-        android:id="@+id/displayLinear"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:weightSum="3">
+    <!--<LinearLayout-->
+        <!--android:id="@+id/displayLinear"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical"-->
+        <!--android:weightSum="3">-->
 
 
-        <FrameLayout
-            android:id="@+id/placeholder"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <!--<FrameLayout-->
+            <!--android:id="@+id/placeholder"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
 
-        </FrameLayout>
+        <!--</FrameLayout>-->
 
 
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
 </android.support.design.widget.CoordinatorLayout>
-    <TextView
+    <FrameLayout
+        android:id="@+id/ChartPlaceholder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="test"/>
+        android:layout_height="match_parent">
+
+    </FrameLayout>
 </LinearLayout>

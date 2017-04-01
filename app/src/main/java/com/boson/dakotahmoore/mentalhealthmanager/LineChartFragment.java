@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -22,10 +23,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +41,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -56,7 +63,7 @@ public class LineChartFragment extends Fragment  {
     private String mParam2;
     private LineChart lineChart;
     private SensorManager sensorManager;
-    private LineData data=new LineData();
+    private LineData data;
     private  LineDataSet datas;
     private ArrayList<Entry> entries= new ArrayList<Entry>();
     private ArrayList<measurableWrapper> measurables=new ArrayList<measurableWrapper>();
@@ -66,6 +73,7 @@ public class LineChartFragment extends Fragment  {
     private Spinner measurableSpinner;
     private OnFragmentInteractionListener mListener;
     private DatabaseHelper dbHelper;
+    private ListView LogList;
 
     public LineChartFragment() {
         // Required empty public constructor
@@ -130,6 +138,8 @@ public class LineChartFragment extends Fragment  {
         lineChart=(LineChart)getView().findViewById(R.id.LineDisplay);
         timeSpinner=(Spinner)getView().findViewById(R.id.Timeframe);
         measurableSpinner=(Spinner)getView().findViewById(R.id.trackedActivity);
+        LogList=(ListView)getView().findViewById(R.id.LogList);
+
 
         Cursor cursor=dbHelper.getMeasurables(userId);
         if (cursor.moveToFirst()){
@@ -148,7 +158,6 @@ public class LineChartFragment extends Fragment  {
         ArrayAdapter<measurableWrapper> measurableAdapter=new ArrayAdapter<measurableWrapper> (getContext(),android.R.layout.simple_spinner_item, measurables);
         measurableAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         measurableSpinner.setAdapter(measurableAdapter);
-
        timeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
            public void onItemSelected(AdapterView<?> parent, View view,
                                       final int position, long id) {
@@ -173,35 +182,71 @@ public class LineChartFragment extends Fragment  {
                                     System.out.println(response);
                                    JSONObject jsonResponse = new JSONObject(response).getJSONArray("data").getJSONObject(0);
                                    JSONArray values=jsonResponse.getJSONArray("values");
+                                   System.out.println(values);
                                    JSONObject mainObject = null;
                                    try {
                                       for(int i=0;i<values.length();i++){
                                           JSONObject value=values.getJSONObject(i);
-                                          JSONObject data=new JSONObject(value.getString("data"));
-                                        // System.out.println(values.getJSONObject(i).toString());
-                                          //System.out.println(values);
+                                            System.out.println("Created Value");
 
-                                          int logValue;
-                                          if(jsonResponse.getString("type").equals("boolean")){
-                                              logValue=1;
-                                          }else{
-                                              logValue=data.getInt("value");
+                                          JSONObject data=new JSONObject(value.getString("data"));
+                                          System.out.println("Created Data");
+
+
+                                          int logValue=0;
+                                          try {
+                                              if(jsonResponse.getString("type").equals("boolean")){
+                                                  logValue=1;
+                                              }else{
+                                                  logValue=data.getInt("value");
+                                                  System.out.println("Accessed Value");
+
+                                              }
+                                          }catch (JSONException e){
+                                              continue;
                                           }
-                                          Logs.add(new MoodLog(data.getString("log"),value.getInt("id"),value.getString("timestamp")));
+
+
                                          String Large[]=value.getString("timestamp").split("\\s|:|-");
+                                          System.out.println("Accessed Time");
+
                                           Date logTime =new Date(Integer.parseInt(Large[0])-1900,Integer.parseInt(Large[1])-1,Integer.parseInt(Large[2]),Integer.parseInt(Large[3]),Integer.parseInt(Large[4]),Integer.parseInt(Large[5]));
                                           float milli=(float)logTime.getTime();
-                                          entries.add(new Entry(milli,(float)logValue));
+                                          System.out.println(milli);
+                                          entries.add(new Entry(milli,logValue));
+                                          Logs.add(new MoodLog(data.getString("log"),value.getInt("id"),logTime));
+                                          System.out.println("Accessed log");
+
                                       }
 
+                                       Collections.sort(entries, new Comparator<Entry>() {
+                                           @Override
+                                           public int compare(Entry o1, Entry o2) {
+                                               return (int)(o1.getX()-o2.getX());
+                                           }
+                                       });
+                                      ArrayAdapter<MoodLog> listAdapter= new ArrayAdapter<MoodLog>(getContext(),android.R.layout.simple_list_item_1,Logs);
+                                       LogList.setAdapter(listAdapter);
+                                       datas=new LineDataSet(entries,measurables.get(measurableSpinner.getSelectedItemPosition()).name);
+                                       data=new LineData(datas);
+                                       //datas.setAxisDependency(YAxis.AxisDependency.LEFT);
+                                       datas.setColors(ColorTemplate.LIBERTY_COLORS);
+                                       datas.setDrawFilled(true);
+                                       XAxis x =lineChart.getXAxis();
+                                     lineChart.getAxisRight().setEnabled(false);
+                                       x.setPosition(XAxis.XAxisPosition.BOTTOM);
+                                       lineChart.setData(data);
+                                       lineChart.animateXY(800,800);
 
 
                                    } catch (JSONException e) {
                                        System.out.println(e.getMessage());
+
                                    }
 
                                } catch (JSONException e) {
                                    e.printStackTrace();
+                                   Toast.makeText(getActivity(),"There is no data for these parameters",Toast.LENGTH_SHORT).show();
                                }
                            }
                        },
@@ -232,18 +277,19 @@ public class LineChartFragment extends Fragment  {
            }
 
        });
-        measurableSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int position, long id) {
-                System.out.println("ITEM SELECTED");
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-
-        });
+        measurableSpinner.setOnItemSelectedListener(timeSpinner.getOnItemSelectedListener());
+//        measurableSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            public void onItemSelected(AdapterView<?> parent, View view,
+//                                       int position, long id) {
+//                System.out.println("ITEM SELECTED");
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//
+//        });
     }
 
 
@@ -341,18 +387,22 @@ public class LineChartFragment extends Fragment  {
 class MoodLog{
        public String Log;
     public int Id;
-    public String Time;
+    public Date Time;
     public int Value;
     public int Lat;
     public int Lng;
-        public MoodLog(String _log, int _Id,String _Time){
+        public MoodLog(String _log, int _Id,Date _Time){
             Log=_log;
             Id=_Id;
             Time=_Time;
         }
         @Override
         public String toString(){
-            return Time +"\n"+Log;
+            final SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+            final SimpleDateFormat TimeFormat = new SimpleDateFormat("HH:MM");
+            String buffer="Time: "+TimeFormat.format(Time)+"   Date: "+ dateFormat.format(Time)+"\n";
+            buffer+=Log;
+            return buffer;
         }
 }
 

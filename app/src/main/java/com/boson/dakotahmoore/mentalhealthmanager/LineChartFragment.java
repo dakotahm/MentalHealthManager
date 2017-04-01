@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -21,11 +22,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -136,14 +145,85 @@ public class LineChartFragment extends Fragment  {
         timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         timeSpinner.setAdapter(timeAdapter);
 
-        ArrayAdapter measurableAdapter=new ArrayAdapter (getContext(),android.R.layout.simple_spinner_item, measurables);
+        ArrayAdapter<measurableWrapper> measurableAdapter=new ArrayAdapter<measurableWrapper> (getContext(),android.R.layout.simple_spinner_item, measurables);
         measurableAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         measurableSpinner.setAdapter(measurableAdapter);
 
        timeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
            public void onItemSelected(AdapterView<?> parent, View view,
-                                      int position, long id) {
+                                      final int position, long id) {
                System.out.println("ITEM SELECTED");
+               timeSpinnerValue=timeSpinner.getSelectedItem().toString();
+               final Date timeFilter =getDate();
+               final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:MM:SS");
+               final SimpleDateFormat stringFormatter = new SimpleDateFormat("yyyy-m-dd HH:MM:SS");
+               Logs=new ArrayList<MoodLog>();
+               entries=new ArrayList<Entry>();
+
+               String requestURL = "http://mhm.bri.land/getLogs.php";
+
+
+               StringRequest postRequest = new StringRequest(Request.Method.POST, requestURL,
+                       new Response.Listener<String>() {
+
+                           @Override
+                           public void onResponse(String response) {
+                               try {
+                                   String test=response.toString();
+                                    System.out.println(response);
+                                   JSONObject jsonResponse = new JSONObject(response).getJSONArray("data").getJSONObject(0);
+                                   JSONArray values=jsonResponse.getJSONArray("values");
+                                   JSONObject mainObject = null;
+                                   try {
+                                      for(int i=0;i<values.length();i++){
+                                          JSONObject value=values.getJSONObject(i);
+                                          JSONObject data=new JSONObject(value.getString("data"));
+                                        // System.out.println(values.getJSONObject(i).toString());
+                                          //System.out.println(values);
+
+                                          int logValue;
+                                          if(jsonResponse.getString("type").equals("boolean")){
+                                              logValue=1;
+                                          }else{
+                                              logValue=data.getInt("value");
+                                          }
+                                          Logs.add(new MoodLog(data.getString("log"),value.getInt("id"),value.getString("timestamp")));
+                                         String Large[]=value.getString("timestamp").split("\\s|:|-");
+                                          Date logTime =new Date(Integer.parseInt(Large[0])-1900,Integer.parseInt(Large[1])-1,Integer.parseInt(Large[2]),Integer.parseInt(Large[3]),Integer.parseInt(Large[4]),Integer.parseInt(Large[5]));
+                                          float milli=(float)logTime.getTime();
+                                          entries.add(new Entry(milli,(float)logValue));
+                                      }
+
+
+
+                                   } catch (JSONException e) {
+                                       System.out.println(e.getMessage());
+                                   }
+
+                               } catch (JSONException e) {
+                                   e.printStackTrace();
+                               }
+                           }
+                       },
+                       new Response.ErrorListener() {
+                           @Override
+                           public void onErrorResponse(VolleyError error) {
+                               error.printStackTrace();
+                           }
+                       }
+               ) {
+                   @Override
+                   protected Map<String, String> getParams()
+                   {
+                       Map<String, String>  params = new HashMap<>();
+                       params.put("user_id", String.valueOf( userId));
+                       params.put("filter_date",formatter.format(timeFilter));
+//                       System.out.println(formatter.format(timeFilter));
+                       params.put("measurable_id",Integer.toString(measurables.get(measurableSpinner.getSelectedItemPosition()).Id));
+                       return params;
+                   }
+               };
+               Volley.newRequestQueue(getContext()).add(postRequest);
            }
 
            @Override
@@ -176,6 +256,7 @@ public class LineChartFragment extends Fragment  {
 
     private Date getDate(){
         Calendar cal =Calendar.getInstance();
+
         switch (timeSpinnerValue){
             case "Day":
                 cal.add(Calendar.DAY_OF_MONTH, -1);

@@ -34,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/seekBar"
         android:layout_toStartOf="@+id/button"
+        android:textSize="12pt"
         android:id="@+id/SeekValue" />
 
 </RelativeLayout>

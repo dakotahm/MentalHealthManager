@@ -6,11 +6,16 @@ import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.IntegerRes;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.TextView;
+
+import com.github.mikephil.charting.charts.LineChart;
 
 
 public class SliderFragment extends Fragment {
@@ -18,11 +23,15 @@ public class SliderFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    TextView nameText;
+    TextView valueText;
+    SeekBar input;
 
     // : Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String Name;
+    private String Value;
+    private int max;
+    private  int min;
     private Button logActivity;
     private Activity c =this.getActivity();
     private OnFragmentInteractionListener mListener;
@@ -46,8 +55,8 @@ public class SliderFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+//            Name = getArguments().getString(ARG_PARAM1);
+//            Value = getArguments().getString(ARG_PARAM2);
         }
 
     }
@@ -57,7 +66,7 @@ public class SliderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_slider, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_slider, null);
         logActivity=(Button) rootView.findViewById(R.id.button);
         logActivity.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -66,9 +75,42 @@ public class SliderFragment extends Fragment {
                 dLog.show();
             }
         });
+        Name=getArguments().getString("name");
+        max=getArguments().getInt("max");
+        min=getArguments().getInt("min");
         return rootView;
     }
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        nameText=(TextView)getView().findViewById(R.id.DataName);
+        nameText.setText(Name);
+         valueText=(TextView)getView().findViewById(R.id.SeekValue);
+        valueText.setText("0");
+        input=(SeekBar)getView().findViewById(R.id.seekBar);
+        input.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
+                // TODO Auto-generated method stub
+
+                int diff=max-min;
+                int range=100/diff;
+               valueText.setText(Integer.toString(progress/range));
+
+            }
+        });
+
+    }
     // : Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

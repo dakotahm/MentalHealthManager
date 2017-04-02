@@ -15,7 +15,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -31,12 +34,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class DataCollectActivity extends AppCompatActivity implements SliderFragment.OnFragmentInteractionListener {
+public class DataCollectActivity extends AppCompatActivity implements SliderFragment.OnFragmentInteractionListener,BooleanFragment.OnFragmentInteractionListener {
     static private boolean firstrun = true;
     String tag;
     private int userId=1;
     //Get id of Listview for fragments and initialize the manager
     LinearLayout fragmentList;
+    FrameLayout theHack;
     FragmentManager fragManager = getSupportFragmentManager();
     DatabaseHelper mydb;
 
@@ -49,6 +53,9 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mydb= new DatabaseHelper(this);
         setSupportActionBar(toolbar);
+        fragmentList = (LinearLayout) findViewById(R.id.CollectDataList);
+        theHack=(FrameLayout) findViewById(R.id.HackandSlash) ;
+
         //new GetMeasurables().execute();
 
         String requestURL = "http://mhm.bri.land/getMeasurables.php";
@@ -63,8 +70,67 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
                     public void onResponse(String response) {
                         try {
                             String test=response.toString();
+                           // System.out.println(response);
                             int jsonResponse = new JSONObject(response).getInt("success");
                             Log.d(tag,"The resposne was "+jsonResponse+"\n\n\n");
+                            JSONObject mainObject = null;
+                            try {
+                                Log.d(tag,response);
+                                mainObject = new JSONObject(response);
+                                JSONArray Measurables =mainObject.getJSONArray("measurables");
+                                System.out.println(Measurables.toString());
+                                FragmentTransaction fragmentTransaction;
+
+
+                                LinearLayout master=(LinearLayout)findViewById(R.id.MasterLinear) ;
+                                LinearLayout frags = new LinearLayout(getApplicationContext());
+                                frags.setOrientation(LinearLayout.VERTICAL);
+                                frags.setId(View.generateViewId());
+                                for(int i=0;i<Measurables.length();i++){
+                                    JSONObject measurable=Measurables.getJSONObject(i);
+//                                    if(measurable.getString("name").equals("sleep"))
+//                                        continue;
+
+                                    fragmentTransaction = fragManager.beginTransaction();
+
+
+                                    //Get Arguments from JSON
+                                    Bundle args=new Bundle();
+
+                                    args.putInt("id",measurable.getInt("id"));
+                                    args.putString("name",measurable.getString("name"));
+                                    args.putString("type",measurable.getString("type"));
+                                    if(measurable.getString("type").equals("value")){
+                                       args.putInt("max",measurable.getInt("max"));
+                                       args.putInt("min",measurable.getInt("min"));
+                                        SliderFragment newSlider = new SliderFragment();
+                                        newSlider.setArguments(args);
+                                        System.out.println(newSlider);
+                                        if(measurable.getString("name").equals("sleep"))
+                                        {
+                                            fragmentTransaction.add(theHack.getId(), newSlider,"newFragment"+i);
+                                        }
+                                        else{
+                                        fragmentTransaction.add(fragmentList.getId(), newSlider,"newFragment"+i);}
+                                        System.out.println(measurable.getString("name"));
+                                        fragmentTransaction.commit();
+
+                                    }else{
+                                        System.out.println("BOOLEAN");
+                                       BooleanFragment newBool = new BooleanFragment();
+                                       newBool.setArguments(args);
+                                      fragmentTransaction.add(fragmentList.getId(), newBool,"newFragment"+i);
+                                        System.out.println(measurable.getString("name"));
+                                    fragmentTransaction.commit();
+                                    }
+
+
+                                }
+
+                            } catch (JSONException e) {
+                                Log.d(tag, "INVALID JSON");
+                            }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

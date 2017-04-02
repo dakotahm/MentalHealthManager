@@ -34,7 +34,8 @@
         <activity
             android:name=".TreatmentAidActivity"
             android:label="@string/title_activity_treatment_aid"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".addMeasurable"></activity>
     </application>
 
 </manifest>

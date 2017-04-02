@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.v4.app.FragmentActivity;
@@ -36,6 +37,8 @@ public class DisplayDataActivity extends AppCompatActivity implements LineChartF
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FragmentManager fragManager = getSupportFragmentManager();
+        final Intent intent=getIntent();
+        userId= intent.getIntExtra("user",1);
 
 
         FloatingActionButton addActivity = (FloatingActionButton) findViewById(R.id.AddActivity);
@@ -43,6 +46,7 @@ public class DisplayDataActivity extends AppCompatActivity implements LineChartF
             @Override
             public void onClick(View view) {
                 Intent addActivityIntent = new Intent(DisplayDataActivity.this, DataCollectActivity.class);
+                addActivityIntent.putExtra("user",userId);
                 startActivity(addActivityIntent);
             }
         });
@@ -52,6 +56,7 @@ public class DisplayDataActivity extends AppCompatActivity implements LineChartF
             @Override
             public void onClick(View view) {
                 Intent displayIntent = new Intent(DisplayDataActivity.this, DisplayDataActivity.class);
+                displayIntent.putExtra("user",userId);
                 startActivity(displayIntent);
             }
         });
@@ -65,12 +70,23 @@ public class DisplayDataActivity extends AppCompatActivity implements LineChartF
 
             }
         });
+        Bundle bundle=new Bundle();
+        bundle.putInt("user",userId);
         FragmentTransaction fragmentTransaction = fragManager.beginTransaction();
         Fragment chart=new LineChartFragment();
+        chart.setArguments(bundle);
         fragmentTransaction.add(R.id.ChartPlaceholder,chart);
         //TODO:This is an example to help you out but it currently fails on commit
         fragmentTransaction.commit();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_display_data, menu);
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -81,6 +97,9 @@ public class DisplayDataActivity extends AppCompatActivity implements LineChartF
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }else if(id==R.id.LogOut){
+            Intent intent=new Intent(this,LoginActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

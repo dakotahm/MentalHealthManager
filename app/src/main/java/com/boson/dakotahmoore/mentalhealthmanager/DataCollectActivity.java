@@ -174,11 +174,12 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
 //        fragmentTransaction.add(fragmentList.getId(), newSlider);
 //        fragmentTransaction.commit();
 
-        FloatingActionButton addActivity = (FloatingActionButton) findViewById(R.id.AddActivity);
+        final FloatingActionButton addActivity = (FloatingActionButton) findViewById(R.id.AddActivity);
         addActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent addActivityIntent = new Intent(DataCollectActivity.this, DataCollectActivity.class);
+                addActivityIntent.putExtra("user",userId);
                 startActivity(addActivityIntent);
             }
         });
@@ -188,6 +189,7 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
             @Override
             public void onClick(View view) {
                 Intent displayIntent = new Intent(DataCollectActivity.this, DisplayDataActivity.class);
+                displayIntent.putExtra("user",userId);
                 startActivity(displayIntent);
             }
         });
@@ -229,6 +231,13 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }else if(id==R.id.AddMeasurableActivity){
+            Intent intent=new Intent(this,addMeasurable.class);
+            intent.putExtra("user",userId);
+            startActivity(intent);
+        }else if(id==R.id.LogOut){
+            Intent intent=new Intent(this,LoginActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

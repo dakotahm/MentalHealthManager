@@ -99,6 +99,7 @@ public class LineChartFragment extends Fragment  {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         dbHelper=new DatabaseHelper(getContext());
+        userId=getArguments().getInt("user");
     }
 
     @Override
@@ -229,12 +230,13 @@ public class LineChartFragment extends Fragment  {
                                        LogList.setAdapter(listAdapter);
                                        datas=new LineDataSet(entries,measurables.get(measurableSpinner.getSelectedItemPosition()).name);
                                        data=new LineData(datas);
-                                       //datas.setAxisDependency(YAxis.AxisDependency.LEFT);
                                        datas.setColors(ColorTemplate.LIBERTY_COLORS);
                                        datas.setDrawFilled(true);
                                        XAxis x =lineChart.getXAxis();
+                                       x.setValueFormatter(new valueFormatter());
                                      lineChart.getAxisRight().setEnabled(false);
                                        x.setPosition(XAxis.XAxisPosition.BOTTOM);
+
                                        lineChart.setData(data);
                                        lineChart.animateXY(800,800);
 
@@ -278,18 +280,6 @@ public class LineChartFragment extends Fragment  {
 
        });
         measurableSpinner.setOnItemSelectedListener(timeSpinner.getOnItemSelectedListener());
-//        measurableSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            public void onItemSelected(AdapterView<?> parent, View view,
-//                                       int position, long id) {
-//                System.out.println("ITEM SELECTED");
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//
-//        });
     }
 
 
@@ -421,3 +411,4 @@ class measurableWrapper{
         return name;
     }
 }
+

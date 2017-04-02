@@ -53,16 +53,10 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mydb= new DatabaseHelper(this);
         setSupportActionBar(toolbar);
-        fragmentList = (LinearLayout) findViewById(R.id.CollectDataList);
-        theHack=(FrameLayout) findViewById(R.id.HackandSlash) ;
+        fragmentList = (LinearLayout) findViewById(R.id.MasterLinear);
         mydb=new DatabaseHelper(this);
 
-        //new GetMeasurables().execute();
-
         String requestURL = "http://mhm.bri.land/getMeasurables.php";
-
-        //String result= Glue.performPostCall(requestURL,postDataParams);
-
 
         StringRequest postRequest = new StringRequest(Request.Method.POST, requestURL,
                 new Response.Listener<String>() {
@@ -76,7 +70,6 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
                             Log.d(tag,"The resposne was "+jsonResponse+"\n\n\n");
                             JSONObject mainObject = null;
                             try {
-                                Log.d(tag,response);
                                 mainObject = new JSONObject(response);
                                 JSONArray Measurables =mainObject.getJSONArray("measurables");
                                 System.out.println(Measurables.toString());
@@ -87,14 +80,9 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
                                 LinearLayout frags = new LinearLayout(getApplicationContext());
                                 frags.setOrientation(LinearLayout.VERTICAL);
                                 frags.setId(View.generateViewId());
+                                fragmentTransaction = fragManager.beginTransaction();
                                 for(int i=0;i<Measurables.length();i++){
                                     JSONObject measurable=Measurables.getJSONObject(i);
-//                                    if(measurable.getString("name").equals("sleep"))
-//                                        continue;
-
-                                    fragmentTransaction = fragManager.beginTransaction();
-
-
                                     //Get Arguments from JSON
                                     Bundle args=new Bundle();
                                     //insert into local database if its not in there
@@ -119,15 +107,10 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
                                        args.putInt("min",measurable.getInt("min"));
                                         SliderFragment newSlider = new SliderFragment();
                                         newSlider.setArguments(args);
-                                        System.out.println(newSlider);
-                                        if(measurable.getString("name").equals("sleep"))
-                                        {
-                                            fragmentTransaction.add(theHack.getId(), newSlider,"newFragment"+i);
-                                        }
-                                        else{
-                                        fragmentTransaction.add(fragmentList.getId(), newSlider,"newFragment"+i);}
+
+
+                                        fragmentTransaction.add(fragmentList.getId(), newSlider,"newFragment"+i);
                                         System.out.println(measurable.getString("name"));
-                                        fragmentTransaction.commit();
 
                                     }else{
                                         System.out.println("BOOLEAN");
@@ -135,11 +118,11 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
                                        newBool.setArguments(args);
                                       fragmentTransaction.add(fragmentList.getId(), newBool,"newFragment"+i);
                                         System.out.println(measurable.getString("name"));
-                                    fragmentTransaction.commit();
-                                    }
+                                   }
 
 
                                 }
+                                fragmentTransaction.commit();
 
                             } catch (JSONException e) {
                                 Log.d(tag, "INVALID JSON");

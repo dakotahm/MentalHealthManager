@@ -76,6 +76,7 @@ public class SliderFragment extends Fragment {
             }
         });
         Name=getArguments().getString("name");
+        Name=Name.substring(0,1).toUpperCase()+Name.substring(1);
         max=getArguments().getInt("max");
         min=getArguments().getInt("min");
         return rootView;

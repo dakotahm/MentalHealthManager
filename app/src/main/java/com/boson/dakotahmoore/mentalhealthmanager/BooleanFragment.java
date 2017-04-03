@@ -1,5 +1,6 @@
 package com.boson.dakotahmoore.mentalhealthmanager;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import static com.boson.dakotahmoore.mentalhealthmanager.R.id.button;
 
 
 //TODO: implement custom dialog like in slider same TODOS apply here
@@ -57,6 +60,7 @@ public class BooleanFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -68,7 +72,16 @@ public class BooleanFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         Name=getArguments().getString("name");
-        return inflater.inflate(R.layout.fragment_boolean, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_boolean, null);
+        logActivity = (Button) rootView.findViewById(R.id.LogBoolean);
+        logActivity.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View view)
+            {
+
+            }
+        });
+        return rootView;
     }
 
     // : Rename method, update argument and hook method into UI event
@@ -95,7 +108,6 @@ public class BooleanFragment extends Fragment {
         nameText.setText(Name);
         valueText=(TextView)getView().findViewById(R.id.Description);
         valueText.setText("");
-
 
     }
 

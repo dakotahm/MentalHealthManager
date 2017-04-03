@@ -93,7 +93,6 @@ public class LogOptionsDialog extends Dialog implements
         minute = calendar.get(calendar.MINUTE);
         time = String.format("%02d:%02d", hour, minute);
 
-
         //TODO:Override Yes button to update database
         yes.setOnClickListener(this);
         no.setOnClickListener(this);

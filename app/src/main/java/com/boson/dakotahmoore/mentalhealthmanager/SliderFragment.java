@@ -54,9 +54,10 @@ public class SliderFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
-//            Name = getArguments().getString(ARG_PARAM1);
-//            Value = getArguments().getString(ARG_PARAM2);
+        //Name = getArguments().getString(ARG_PARAM1);
+        //Value = getArguments().getString(ARG_PARAM2);
         }
 
     }
@@ -71,7 +72,7 @@ public class SliderFragment extends Fragment {
         logActivity.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                LogOptionsDialog dLog=new LogOptionsDialog(c);
+                LogOptionsDialog dLog = new LogOptionsDialog(c);
                 dLog.show();
             }
         });

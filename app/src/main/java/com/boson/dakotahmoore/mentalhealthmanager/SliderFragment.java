@@ -72,7 +72,7 @@ public class SliderFragment extends Fragment {
         logActivity.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                LogOptionsDialog dLog = new LogOptionsDialog(c);
+                LogOptionsDialog dLog = new LogOptionsDialog(getActivity());
                 dLog.show();
             }
         });

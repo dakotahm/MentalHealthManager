@@ -81,7 +81,7 @@ public class LogOptionsDialog extends Dialog implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        calendar= java.util.Calendar.getInstance();
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.fragment_log_options_dialog);
         yes = (Button) findViewById(R.id.button2);

@@ -48,6 +48,7 @@ public class LogOptionsDialog extends Dialog implements
     private int hour;
     private int minute;
     private String time;
+    private int userId;
 
     // : Rename and change types of parameters
     private String mParam1;
@@ -56,6 +57,7 @@ public class LogOptionsDialog extends Dialog implements
     public Button yes, no;
     public Activity c;
     public Dialog d;
+    private DatabaseHelper myDb;
 
     @Override
     public void onClick(View v) {
@@ -89,6 +91,8 @@ public class LogOptionsDialog extends Dialog implements
         yes = (Button) findViewById(R.id.button2);
         no = (Button) findViewById(R.id.button3);
         logText=(EditText) findViewById(R.id.LogEditText);
+        myDb=new DatabaseHelper(getContext());
+        userId=myDb.checkUsers();
 
         //Setup time and date
         day = calendar.get(calendar.DAY_OF_MONTH);

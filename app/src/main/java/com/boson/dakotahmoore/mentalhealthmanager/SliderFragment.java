@@ -72,11 +72,12 @@ public class SliderFragment extends Fragment {
         logActivity.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                LogOptionsDialog dLog = new LogOptionsDialog(c);
+                LogOptionsDialog dLog = new LogOptionsDialog(getActivity());
                 dLog.show();
             }
         });
         Name=getArguments().getString("name");
+        Name=Name.substring(0,1).toUpperCase()+Name.substring(1);
         max=getArguments().getInt("max");
         min=getArguments().getInt("min");
         return rootView;

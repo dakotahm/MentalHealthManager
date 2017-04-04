@@ -20,15 +20,18 @@
             android:name=".DataCollectActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login" />
         <activity
             android:name=".DisplayDataActivity"
             android:label="@string/title_activity_display_data"
@@ -36,7 +39,8 @@
         <activity
             android:name=".TreatmentAidActivity"
             android:label="@string/title_activity_treatment_aid"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".addMeasurable"></activity>
     </application>
 
 </manifest>

@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.boson.dakotahmoore.mentalhealthmanager.BooleanFragment">
+    tools:context="com.boson.dakotahmoore.mentalhealthmanager.BooleanFragment"
+    android:padding="5dp">
 
     <!--  Update blank fragment layout -->
     <TextView

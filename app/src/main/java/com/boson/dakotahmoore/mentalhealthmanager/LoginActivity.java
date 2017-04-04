@@ -3,9 +3,12 @@ package com.boson.dakotahmoore.mentalhealthmanager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.SQLException;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -28,11 +31,23 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -63,6 +78,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +110,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        dbHelper=new DatabaseHelper(this);
+       try{
+           int user=dbHelper.checkUsers();
+           if(user!=-1){
+               Intent intent=new Intent(this,DataCollectActivity.class);
+               intent.putExtra("user",user);
+               startActivity(intent);
+           }
+       }catch (SQLException e){
+           dbHelper.CreateUserTable();
+       }
+
     }
 
     private void populateAutoComplete() {
@@ -155,8 +183,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        final String email = mEmailView.getText().toString();
+        final String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -187,8 +215,53 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+           // mAuthTask = new UserLoginTask(email, password);
+            //mAuthTask.execute((Void) null);
+            String requestURL = "http://mhm.bri.land/checkLogin.php";
+            StringRequest postRequest = new StringRequest(Request.Method.POST, requestURL,
+                    new Response.Listener<String>() {
+
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject json = new JSONObject(response);
+                                if(json.getInt("success")==1){
+                                    if(dbHelper.UserDoesNotExist(json.getInt("user_id"))){
+                                        dbHelper.insertUser(json.getInt("user_id"),email);
+                                    }else{
+                                        dbHelper.UpdateStatus(json.getInt("user_id"),1);
+                                    }
+
+                                    Intent intent=new Intent(LoginActivity.this,DataCollectActivity.class);
+                                    intent.putExtra("user",json.getInt("user_id"));
+                                    startActivity(intent);
+                                }else{
+                                    mPasswordView.setError(getString(R.string.error_incorrect_password));
+                                    mPasswordView.requestFocus();
+                                    showProgress(false);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            error.printStackTrace();
+                        }
+                    }
+            ) {
+                @Override
+                protected Map<String, String> getParams()
+                {
+                    Map<String, String>  params = new HashMap<>();
+                    params.put("username", email);
+                    params.put("password",password);
+                    return params;
+                }
+            };
+            Volley.newRequestQueue(getApplicationContext()).add(postRequest);
         }
     }
 

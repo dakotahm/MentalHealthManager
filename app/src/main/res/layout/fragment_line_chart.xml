@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.boson.dakotahmoore.mentalhealthmanager.LineChartFragment">
+    tools:context="com.boson.dakotahmoore.mentalhealthmanager.LineChartFragment"
+    >
 
 <LinearLayout
     android:layout_width="match_parent"
@@ -12,11 +13,12 @@
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/LineDisplay"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        android:minHeight="200dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
         android:weightSum="2">
         <Spinner
@@ -32,10 +34,13 @@
             android:layout_weight="1"
             />
     </LinearLayout>
-    <TextView
+    <ListView
+        android:id="@+id/LogList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="HERE I AM"/>
+        android:layout_height="wrap_content">
+
+    </ListView>
+
 </LinearLayout>
 
 

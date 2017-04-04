@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -51,6 +52,7 @@ public class LogOptionsDialog extends Dialog implements
     // : Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private EditText logText;
     public Button yes, no;
     public Activity c;
     public Dialog d;
@@ -81,11 +83,12 @@ public class LogOptionsDialog extends Dialog implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        calendar= java.util.Calendar.getInstance();
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.fragment_log_options_dialog);
         yes = (Button) findViewById(R.id.button2);
         no = (Button) findViewById(R.id.button3);
+        logText=(EditText) findViewById(R.id.LogEditText);
 
         //Setup time and date
         day = calendar.get(calendar.DAY_OF_MONTH);

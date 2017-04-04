@@ -50,18 +50,14 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_collect);
+        userId=getIntent().getIntExtra("user",1);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mydb= new DatabaseHelper(this);
         setSupportActionBar(toolbar);
-        fragmentList = (LinearLayout) findViewById(R.id.CollectDataList);
-        theHack=(FrameLayout) findViewById(R.id.HackandSlash) ;
-
-        //new GetMeasurables().execute();
+        fragmentList = (LinearLayout) findViewById(R.id.MasterLinear);
+        mydb=new DatabaseHelper(this);
 
         String requestURL = "http://mhm.bri.land/getMeasurables.php";
-
-        //String result= Glue.performPostCall(requestURL,postDataParams);
-
 
         StringRequest postRequest = new StringRequest(Request.Method.POST, requestURL,
                 new Response.Listener<String>() {
@@ -75,7 +71,6 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
                             Log.d(tag,"The resposne was "+jsonResponse+"\n\n\n");
                             JSONObject mainObject = null;
                             try {
-                                Log.d(tag,response);
                                 mainObject = new JSONObject(response);
                                 JSONArray Measurables =mainObject.getJSONArray("measurables");
                                 System.out.println(Measurables.toString());
@@ -86,16 +81,24 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
                                 LinearLayout frags = new LinearLayout(getApplicationContext());
                                 frags.setOrientation(LinearLayout.VERTICAL);
                                 frags.setId(View.generateViewId());
+                                fragmentTransaction = fragManager.beginTransaction();
                                 for(int i=0;i<Measurables.length();i++){
                                     JSONObject measurable=Measurables.getJSONObject(i);
-//                                    if(measurable.getString("name").equals("sleep"))
-//                                        continue;
-
-                                    fragmentTransaction = fragManager.beginTransaction();
-
-
                                     //Get Arguments from JSON
                                     Bundle args=new Bundle();
+                                    //insert into local database if its not in there
+
+                                    if(mydb.checkMeasurables(measurable.getInt("id")).getCount()==0){
+                                        if(measurable.getString("type").equals("boolean")){
+                                          boolean result= mydb.insertMeasurable(measurable.getInt("id"),measurable.getString("name"),measurable.getString("type"),-1,-1,userId);
+                                            if(result)
+                                                System.out.println("BOOLEAN INSERT FAILED");
+                                        }else{
+                                            boolean result= mydb.insertMeasurable(measurable.getInt("id"),measurable.getString("name"),measurable.getString("type"),measurable.getInt("max"),measurable.getInt("min"),userId);
+                                            if(result)
+                                                System.out.println("BOOLEAN INSERT FAILED");
+                                        }
+                                    }
 
                                     args.putInt("id",measurable.getInt("id"));
                                     args.putString("name",measurable.getString("name"));
@@ -105,15 +108,10 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
                                        args.putInt("min",measurable.getInt("min"));
                                         SliderFragment newSlider = new SliderFragment();
                                         newSlider.setArguments(args);
-                                        System.out.println(newSlider);
-                                        if(measurable.getString("name").equals("sleep"))
-                                        {
-                                            fragmentTransaction.add(theHack.getId(), newSlider,"newFragment"+i);
-                                        }
-                                        else{
-                                        fragmentTransaction.add(fragmentList.getId(), newSlider,"newFragment"+i);}
+
+
+                                        fragmentTransaction.add(fragmentList.getId(), newSlider,"newFragment"+i);
                                         System.out.println(measurable.getString("name"));
-                                        fragmentTransaction.commit();
 
                                     }else{
                                         System.out.println("BOOLEAN");
@@ -121,11 +119,11 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
                                        newBool.setArguments(args);
                                       fragmentTransaction.add(fragmentList.getId(), newBool,"newFragment"+i);
                                         System.out.println(measurable.getString("name"));
-                                    fragmentTransaction.commit();
-                                    }
+                                   }
 
 
                                 }
+                                fragmentTransaction.commit();
 
                             } catch (JSONException e) {
                                 Log.d(tag, "INVALID JSON");
@@ -160,11 +158,12 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
 //        fragmentTransaction.add(fragmentList.getId(), newSlider);
 //        fragmentTransaction.commit();
 
-        FloatingActionButton addActivity = (FloatingActionButton) findViewById(R.id.AddActivity);
+        final FloatingActionButton addActivity = (FloatingActionButton) findViewById(R.id.AddActivity);
         addActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent addActivityIntent = new Intent(DataCollectActivity.this, DataCollectActivity.class);
+                addActivityIntent.putExtra("user",userId);
                 startActivity(addActivityIntent);
             }
         });
@@ -174,6 +173,7 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
             @Override
             public void onClick(View view) {
                 Intent displayIntent = new Intent(DataCollectActivity.this, DisplayDataActivity.class);
+                displayIntent.putExtra("user",userId);
                 startActivity(displayIntent);
             }
         });
@@ -215,6 +215,14 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }else if(id==R.id.AddMeasurableActivity){
+            Intent intent=new Intent(this,addMeasurable.class);
+            intent.putExtra("user",userId);
+            startActivity(intent);
+        }else if(id==R.id.LogOut){
+            Intent intent=new Intent(this,LoginActivity.class);
+            mydb.UpdateStatus(userId,0);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

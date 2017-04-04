@@ -25,6 +25,18 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import static android.content.Context.LOCATION_SERVICE;
 
 //TODO:Wire data time buttons to dateTimePickerDialog and TimePickerDialog and set text to selected value
@@ -44,10 +56,14 @@ public class LogOptionsDialog extends Dialog implements
     private LocationListener locationListener;
 
     private java.util.Calendar calendar;
+    private int year;
+    private int month;
     private int day;
     private int hour;
     private int minute;
+    private int second;
     private String time;
+
     private int userId;
 
     // : Rename and change types of parameters
@@ -94,12 +110,6 @@ public class LogOptionsDialog extends Dialog implements
         myDb=new DatabaseHelper(getContext());
         userId=myDb.checkUsers();
 
-        //Setup time and date
-        day = calendar.get(calendar.DAY_OF_MONTH);
-        hour = calendar.get(calendar.HOUR_OF_DAY);
-        minute = calendar.get(calendar.MINUTE);
-        time = String.format("%02d:%02d", hour, minute);
-
         //TODO:Override Yes button to update database
         yes.setOnClickListener(this);
         no.setOnClickListener(this);
@@ -134,6 +144,62 @@ public class LogOptionsDialog extends Dialog implements
         };
 
         configure_permission();
+
+        //Push Yes, log to database
+        yes.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                //Setup time and date
+                year = calendar.get(calendar.YEAR);
+                month = calendar.get(calendar.MONTH) + 1;
+                day = calendar.get(calendar.DAY_OF_MONTH);
+                hour = calendar.get(calendar.HOUR_OF_DAY);
+                minute = calendar.get(calendar.MINUTE);
+                second = calendar.get(calendar.SECOND);
+                time = String.format("%d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, minute, second);
+
+                //Send a request to database and add time log
+                String requestURL = "http://mhm.bri.land/addLog.php";
+                StringRequest postRequest = new StringRequest(Request.Method.POST, requestURL,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    //This is the Json object for response
+                                    //parse for success
+                                    JSONObject jsonResponse = new JSONObject(response).getJSONArray("data").getJSONObject(0);
+
+                                } catch (JSONException e) {
+                                    System.out.println(e.getMessage());
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                error.printStackTrace();
+                            }
+                        }) {
+                            @Override
+                            protected Map<String, String> getParams()
+                            {
+                                Map<String, String>  params = new HashMap<>();
+                                params.put("user_id", String.valueOf(userId));
+                                //put your params here
+                                params.put("timestamp", time);
+                                return params;
+                            }
+                        };
+               Volley.newRequestQueue(getContext()).add(postRequest);
+                dismiss();
+            }
+        });
+
+        //Push no, close this dialog
+        no.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                dismiss();
+            }
+        });
     }
 
 

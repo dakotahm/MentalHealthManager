@@ -35,7 +35,7 @@ public class SliderFragment extends Fragment {
     private Button logActivity;
     private Activity c =this.getActivity();
     private OnFragmentInteractionListener mListener;
-
+    private int userID;
     public SliderFragment() {
         // Required empty public constructor
     }
@@ -54,7 +54,7 @@ public class SliderFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        userID=getArguments().getInt("user");
         if (getArguments() != null) {
         //Name = getArguments().getString(ARG_PARAM1);
         //Value = getArguments().getString(ARG_PARAM2);

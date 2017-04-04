@@ -50,6 +50,7 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_collect);
+        userId=getIntent().getIntExtra("user",1);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mydb= new DatabaseHelper(this);
         setSupportActionBar(toolbar);
@@ -220,6 +221,7 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
             startActivity(intent);
         }else if(id==R.id.LogOut){
             Intent intent=new Intent(this,LoginActivity.class);
+            mydb.UpdateStatus(userId,0);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

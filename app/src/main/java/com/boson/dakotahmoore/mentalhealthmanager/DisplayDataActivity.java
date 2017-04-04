@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -98,6 +99,8 @@ public class DisplayDataActivity extends AppCompatActivity implements LineChartF
         if (id == R.id.action_settings) {
             return true;
         }else if(id==R.id.LogOut){
+            DatabaseHelper myDB=new DatabaseHelper(this);
+            myDB.UpdateStatus(userId,0);
             Intent intent=new Intent(this,LoginActivity.class);
             startActivity(intent);
         }

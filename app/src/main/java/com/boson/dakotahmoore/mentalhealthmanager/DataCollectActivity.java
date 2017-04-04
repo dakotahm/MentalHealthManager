@@ -103,9 +103,11 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
                                     args.putInt("id",measurable.getInt("id"));
                                     args.putString("name",measurable.getString("name"));
                                     args.putString("type",measurable.getString("type"));
+                                    args.putInt("user",userId);
                                     if(measurable.getString("type").equals("value")){
                                        args.putInt("max",measurable.getInt("max"));
                                        args.putInt("min",measurable.getInt("min"));
+
                                         SliderFragment newSlider = new SliderFragment();
                                         newSlider.setArguments(args);
 

@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -35,6 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -157,7 +159,7 @@ public class LogOptionsDialog extends Dialog implements
 
 
                 //This is the standard for literally every programming language
-                java.util.Calendar cal = java.util.Calendar.getInstance();
+                Date cal = new Date();
                 final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:MM:SS");
                 time=formatter.format(cal);
 
@@ -172,6 +174,11 @@ public class LogOptionsDialog extends Dialog implements
                                     //parse for success
                                     JSONObject jsonResponse = new JSONObject(response);
                                     System.out.println(jsonResponse.toString());
+                                    if(jsonResponse.getInt("success")==1){
+                                        Toast.makeText(getContext(),"Log Success",Toast.LENGTH_SHORT).show();
+                                    }else{
+                                        Toast.makeText(getContext(),"Log add Failed",Toast.LENGTH_SHORT).show();
+                                    }
 
                                 } catch (JSONException e) {
                                     System.out.println(e.getMessage());
@@ -200,7 +207,7 @@ public class LogOptionsDialog extends Dialog implements
                                 params.put("data",json.toString());
                                 params.put("user_id", String.valueOf(userId));
                                 //put your params here
-                                params.put("timestamp", time);
+                                //params.put("timestamp", time);
                                 return params;
                             }
                         };
@@ -238,12 +245,9 @@ public class LogOptionsDialog extends Dialog implements
             return;
         }
         // this code won't execute IF permissions are not allowed, because in the line above there is return statement.
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+
                 //noinspection MissingPermission
                 locationManager.requestLocationUpdates("gps", 5000, 1, locationListener);
-            }
-        });
+
     }
 }

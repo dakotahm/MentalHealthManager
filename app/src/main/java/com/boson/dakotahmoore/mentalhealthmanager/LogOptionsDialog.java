@@ -34,6 +34,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,8 +50,8 @@ public class LogOptionsDialog extends Dialog implements
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private static double CordX = 0.0;
-    private static double CordY = 0.0;
+    private static double CordX ;
+    private static double CordY;
 
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -74,6 +75,7 @@ public class LogOptionsDialog extends Dialog implements
     public Activity c;
     public Dialog d;
     private DatabaseHelper myDb;
+    private int value;
 
     @Override
     public void onClick(View v) {
@@ -91,10 +93,11 @@ public class LogOptionsDialog extends Dialog implements
     }
 
 
-    public LogOptionsDialog(Activity a) {
+    public LogOptionsDialog(Activity a,int _value) {
         super(a);
         // TODO Auto-generated constructor stub
         this.c = a;
+        value=_value;
     }
 
     //TODO: add handlers for date and time buttons call timepickers and retrieve values
@@ -113,7 +116,8 @@ public class LogOptionsDialog extends Dialog implements
         //TODO:Override Yes button to update database
         yes.setOnClickListener(this);
         no.setOnClickListener(this);
-
+        CordX=0;
+        CordY=0;
         //Initialize request location service
         locationManager = (LocationManager) c.getSystemService(LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -149,13 +153,13 @@ public class LogOptionsDialog extends Dialog implements
         yes.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 //Setup time and date
-                year = calendar.get(calendar.YEAR);
-                month = calendar.get(calendar.MONTH) + 1;
-                day = calendar.get(calendar.DAY_OF_MONTH);
-                hour = calendar.get(calendar.HOUR_OF_DAY);
-                minute = calendar.get(calendar.MINUTE);
-                second = calendar.get(calendar.SECOND);
-                time = String.format("%d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, minute, second);
+
+
+
+                //This is the standard for literally every programming language
+                java.util.Calendar cal = java.util.Calendar.getInstance();
+                final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:MM:SS");
+                time=formatter.format(cal);
 
                 //Send a request to database and add time log
                 String requestURL = "http://mhm.bri.land/addLog.php";
@@ -166,7 +170,8 @@ public class LogOptionsDialog extends Dialog implements
                                 try {
                                     //This is the Json object for response
                                     //parse for success
-                                    JSONObject jsonResponse = new JSONObject(response).getJSONArray("data").getJSONObject(0);
+                                    JSONObject jsonResponse = new JSONObject(response);
+                                    System.out.println(jsonResponse.toString());
 
                                 } catch (JSONException e) {
                                     System.out.println(e.getMessage());
@@ -183,6 +188,16 @@ public class LogOptionsDialog extends Dialog implements
                             protected Map<String, String> getParams()
                             {
                                 Map<String, String>  params = new HashMap<>();
+                                JSONObject json = new JSONObject();
+                                try {
+                                    json.put("lat",CordX);
+                                    json.put("value",value);
+                                    json.put("lng",CordY);
+                                    json.put("log",logText.getText().toString());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                params.put("data",json.toString());
                                 params.put("user_id", String.valueOf(userId));
                                 //put your params here
                                 params.put("timestamp", time);

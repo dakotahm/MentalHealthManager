@@ -29,7 +29,7 @@ public class SliderFragment extends Fragment {
 
     // : Rename and change types of parameters
     private String Name;
-    private String Value;
+    private int Value;
     private int max;
     private  int min;
     private Button logActivity;
@@ -72,7 +72,7 @@ public class SliderFragment extends Fragment {
         logActivity.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                LogOptionsDialog dLog = new LogOptionsDialog(getActivity());
+                LogOptionsDialog dLog = new LogOptionsDialog(getActivity(),Value);
                 dLog.show();
             }
         });
@@ -80,6 +80,7 @@ public class SliderFragment extends Fragment {
         Name=Name.substring(0,1).toUpperCase()+Name.substring(1);
         max=getArguments().getInt("max");
         min=getArguments().getInt("min");
+        Value=min;
         return rootView;
     }
     @Override
@@ -107,8 +108,8 @@ public class SliderFragment extends Fragment {
 
                 int diff=max-min;
                 int range=100/diff;
-               valueText.setText(Integer.toString(progress/range));
-
+                Value=(progress/range)+min;
+               valueText.setText(Integer.toString((progress/range)+min));
             }
         });
 

@@ -78,6 +78,7 @@ public class LogOptionsDialog extends Dialog implements
     public Dialog d;
     private DatabaseHelper myDb;
     private int value;
+    private  int measurableID;
 
     @Override
     public void onClick(View v) {
@@ -95,11 +96,13 @@ public class LogOptionsDialog extends Dialog implements
     }
 
 
-    public LogOptionsDialog(Activity a,int _value) {
+    public LogOptionsDialog(Activity a,int _value,int _measurableId) {
         super(a);
         // TODO Auto-generated constructor stub
         this.c = a;
         value=_value;
+        measurableID=_measurableId;
+
     }
 
     //TODO: add handlers for date and time buttons call timepickers and retrieve values
@@ -206,8 +209,8 @@ public class LogOptionsDialog extends Dialog implements
                                 }
                                 params.put("data",json.toString());
                                 params.put("user_id", String.valueOf(userId));
-                                //put your params here
-                                //params.put("timestamp", time);
+                                params.put("measurable_id",Integer.toString(measurableID));
+                                params.put("timestamp",time);
                                 return params;
                             }
                         };

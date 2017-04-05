@@ -36,6 +36,7 @@ public class SliderFragment extends Fragment {
     private Activity c =this.getActivity();
     private OnFragmentInteractionListener mListener;
     private int userID;
+    private int measurableID;
     public SliderFragment() {
         // Required empty public constructor
     }
@@ -48,6 +49,7 @@ public class SliderFragment extends Fragment {
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -72,7 +74,7 @@ public class SliderFragment extends Fragment {
         logActivity.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                LogOptionsDialog dLog = new LogOptionsDialog(getActivity(),Value);
+                LogOptionsDialog dLog = new LogOptionsDialog(getActivity(),Value,measurableID);
                 dLog.show();
             }
         });
@@ -80,6 +82,7 @@ public class SliderFragment extends Fragment {
         Name=Name.substring(0,1).toUpperCase()+Name.substring(1);
         max=getArguments().getInt("max");
         min=getArguments().getInt("min");
+        measurableID=getArguments().getInt("id");
         Value=min;
         return rootView;
     }

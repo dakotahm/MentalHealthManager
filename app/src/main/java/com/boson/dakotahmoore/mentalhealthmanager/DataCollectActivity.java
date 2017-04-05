@@ -73,7 +73,7 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
                             try {
                                 mainObject = new JSONObject(response);
                                 JSONArray Measurables =mainObject.getJSONArray("measurables");
-                                System.out.println(Measurables.toString());
+                                //System.out.println(Measurables.toString());
                                 FragmentTransaction fragmentTransaction;
 
 
@@ -113,14 +113,14 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
 
 
                                         fragmentTransaction.add(fragmentList.getId(), newSlider,"newFragment"+i);
-                                        System.out.println(measurable.getString("name"));
+                                        //System.out.println(measurable.getString("name"));
 
                                     }else{
-                                        System.out.println("BOOLEAN");
+                                        //System.out.println("BOOLEAN");
                                        BooleanFragment newBool = new BooleanFragment();
                                        newBool.setArguments(args);
                                       fragmentTransaction.add(fragmentList.getId(), newBool,"newFragment"+i);
-                                        System.out.println(measurable.getString("name"));
+                                        //System.out.println(measurable.getString("name"));
                                    }
 
 

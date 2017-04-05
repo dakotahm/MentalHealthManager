@@ -49,18 +49,18 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/spinner"
         android:layout_marginTop="20dp"
-        android:text="TextView"
-        tools:text="Measurable Max" />
+        android:text="Measurable Maximum"
+        tools:text="Measurable Maximum" />
 
     <EditText
         android:id="@+id/MaxEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/MeasurableMaxText"
         android:ems="10"
-        android:hint="Default 0"
-        android:inputType="number" />
+        android:hint="Default 100"
+        android:inputType="number"
+        android:layout_below="@+id/MeasurableMaxText"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/MeasurableMinText"
@@ -78,7 +78,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/MeasurableMinText"
         android:ems="10"
-        android:hint="Default 100"
+        android:hint="Default 0"
         android:inputType="number" />
 
     <Button

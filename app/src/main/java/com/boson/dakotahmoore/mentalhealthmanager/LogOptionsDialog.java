@@ -2,28 +2,25 @@ package com.boson.dakotahmoore.mentalhealthmanager;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.icu.util.Calendar;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -59,15 +56,18 @@ public class LogOptionsDialog extends Dialog implements
     private LocationListener locationListener;
 
     private java.util.Calendar calendar;
-    private int year;
-    private int month;
+    private int years;
+    private int monthSelected;
     private int day;
     private int hour;
-    private int minute;
+    private int min;
     private int second;
     private String time;
-
+    static final int DATE_DIALOG_ID = 0;
+    static final int TIME_DIALOG_ID=1;
     private int userId;
+    Boolean TimeSet;
+
 
     // : Rename and change types of parameters
     private String mParam1;
@@ -79,6 +79,9 @@ public class LogOptionsDialog extends Dialog implements
     private DatabaseHelper myDb;
     private int value;
     private  int measurableID;
+    Button timeButon;
+    TimePickerDialog timeDialog;
+    DatePickerDialog dateDialog;
 
     @Override
     public void onClick(View v) {
@@ -117,7 +120,33 @@ public class LogOptionsDialog extends Dialog implements
         logText=(EditText) findViewById(R.id.LogEditText);
         myDb=new DatabaseHelper(getContext());
         userId=myDb.checkUsers();
+        TimeSet=false;
 
+        DatePickerDialog.OnDateSetListener dateListener=new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                years  = year;
+                monthSelected = month;
+                day = dayOfMonth;
+                Date setTime=new Date(years-1900,monthSelected,day,hour,min,0);
+                System.out.println(setTime.toString());
+            }
+        };
+
+
+
+       TimePickerDialog.OnTimeSetListener timeListener=new TimePickerDialog.OnTimeSetListener() {
+           @Override
+           public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+               hour = hourOfDay;
+               min=minute;
+               TimeSet=true;
+               dateDialog.show();
+           }
+       };
+
+       timeDialog =  new TimePickerDialog(getContext(),timeListener,12,0,true);
+        dateDialog= new DatePickerDialog(getContext(),0,dateListener,2017,1,1);
         //TODO:Override Yes button to update database
         yes.setOnClickListener(this);
         no.setOnClickListener(this);
@@ -154,6 +183,12 @@ public class LogOptionsDialog extends Dialog implements
 
         configure_permission();
 
+        timeButon=(Button) findViewById(R.id.TimeSelectButton);
+        timeButon.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                timeDialog.show();
+            }
+        });
         //Push Yes, log to database
         yes.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
@@ -210,7 +245,10 @@ public class LogOptionsDialog extends Dialog implements
                                 params.put("data",json.toString());
                                 params.put("user_id", String.valueOf(userId));
                                 params.put("measurable_id",Integer.toString(measurableID));
-                                params.put("timestamp",time);
+                                if(TimeSet){
+                                    Date setTime=new Date(years-1900,monthSelected,day,hour,min,0);
+                                    params.put("timestamp",formatter.format(setTime));
+                                }
                                 return params;
                             }
                         };
@@ -226,6 +264,26 @@ public class LogOptionsDialog extends Dialog implements
             }
         });
     }
+    private TimePickerDialog.OnTimeSetListener mTimeSetListener =
+            new TimePickerDialog.OnTimeSetListener() {
+                // the callback received when the user "sets" the TimePickerDialog in the dialog
+                public void onTimeSet(TimePicker view, int hourOfDay, int min) {
+                    hour = hourOfDay;
+                    LogOptionsDialog.this.min = min;
+                    TimeSet=true;
+                    dateDialog.show();
+                }
+            };
+
+    private DatePickerDialog.OnDateSetListener mDateSetListener =
+            new DatePickerDialog.OnDateSetListener() {                 // the callback received when the user "sets" the Date in the DatePickerDialog
+                public void onDateSet(DatePicker view, int yearSelected,
+                                      int monthOfYear, int dayOfMonth) {
+                    years  = yearSelected;
+                    monthSelected = monthOfYear;
+                    day = dayOfMonth;
+                }
+            };
 
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

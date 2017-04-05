@@ -48,7 +48,7 @@ public class addMeasurable extends AppCompatActivity {
         Max=(EditText) findViewById(R.id.MaxEditText);
         Min=(EditText) findViewById(R.id.MinimumEditText);
         Name=(EditText) findViewById(R.id.NameEditText);
-        String typeList[]={"slider","boolean"};
+        final String typeList[]={"value","boolean"};
         Intent intent=getIntent();
         UserId=intent.getIntExtra("user",1);
 
@@ -63,17 +63,23 @@ public class addMeasurable extends AppCompatActivity {
                 if(Name.getText().toString().trim().length()==0){
                     Toast.makeText(getApplicationContext(),"Invalid Name Value",Toast.LENGTH_SHORT).show();
                 }else{
-                    if(Max.getText().toString().trim().length()==0){
+                    try {
+                        min = Integer.parseInt(Min.getText().toString());
+                    }catch (NumberFormatException e){
                         min=0;
-                    }else{
-                        min=Integer.parseInt(Min.getText().toString());
                     }
 
-                    if(Min.getText().toString().trim().length()==0){
-                        max=100;
-                    }else{
+                   try{
                         max=Integer.parseInt(Max.getText().toString());
-                    }
+                    }catch (NumberFormatException e){
+                       max=100;
+                   }
+
+                   if(min>=max){
+                       Toast.makeText(getApplicationContext(),"Minimum cannot be greater than Maximum",Toast.LENGTH_SHORT).show();
+                       return;
+                   }
+
 
                     String requestURL = "http://mhm.bri.land/addMeasurable.php";
 
@@ -118,7 +124,8 @@ public class addMeasurable extends AppCompatActivity {
                             params.put("name",Name.getText().toString());
                             params.put("max",Max.getText().toString());
                             params.put("min",Min.getText().toString());
-                            params.put("type",types.getSelectedItem().toString());
+                           params.put("type",types.getSelectedItem().toString());
+                            System.out.println(types.getSelectedItem());
                             return params;
                         }
                     };

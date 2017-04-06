@@ -24,7 +24,7 @@ public class BooleanFragment extends Fragment {
     private String Name;
     private String Value;
     private int max;
-    private  int min;
+    private  int min,measurableID;
     private Button logActivity;
     TextView nameText;
     TextView valueText;
@@ -72,13 +72,15 @@ public class BooleanFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         Name=getArguments().getString("name");
+        measurableID=getArguments().getInt("id");
         View rootView = inflater.inflate(R.layout.fragment_boolean, null);
         logActivity = (Button) rootView.findViewById(R.id.LogBoolean);
         logActivity.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View view)
             {
-
+                LogOptionsDialog dLog = new LogOptionsDialog(getActivity(),1,measurableID);
+                dLog.show();
             }
         });
         return rootView;

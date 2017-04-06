@@ -12,4 +12,12 @@
         android:orderInCategory="100"
         android:title="@string/log_off"
         app:showAsAction="never" />
+    <item android:id="@+id/DataCollectAction"
+        android:title="Data Display"
+        android:icon="@drawable/editdata"
+        app:showAsAction="always"/>
+    <item android:id="@+id/GetMeasurableAction"
+        android:icon="@drawable/cross"
+        android:title="Add Measurable"
+        app:showAsAction="always"/>
 </menu>

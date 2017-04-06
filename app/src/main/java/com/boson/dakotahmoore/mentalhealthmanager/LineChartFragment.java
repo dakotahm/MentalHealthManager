@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -74,6 +75,7 @@ public class LineChartFragment extends Fragment  {
     private OnFragmentInteractionListener mListener;
     private DatabaseHelper dbHelper;
     private ListView LogList;
+    private TextView ChartName;
 
     public LineChartFragment() {
         // Required empty public constructor
@@ -140,6 +142,7 @@ public class LineChartFragment extends Fragment  {
         timeSpinner=(Spinner)getView().findViewById(R.id.Timeframe);
         measurableSpinner=(Spinner)getView().findViewById(R.id.trackedActivity);
         LogList=(ListView)getView().findViewById(R.id.LogList);
+        ChartName=(TextView) getView().findViewById(R.id.ChartName);
 
 
         Cursor cursor=dbHelper.getMeasurables(userId);
@@ -163,6 +166,9 @@ public class LineChartFragment extends Fragment  {
            public void onItemSelected(AdapterView<?> parent, View view,
                                       final int position, long id) {
                System.out.println("ITEM SELECTED");
+               String ChartBuffer=measurableSpinner.getSelectedItem().toString();
+               ChartBuffer=ChartBuffer.substring(0,1).toUpperCase()+ChartBuffer.substring(1);
+               ChartName.setText(ChartBuffer);
                timeSpinnerValue=timeSpinner.getSelectedItem().toString();
                final Date timeFilter =getDate();
                final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:MM:SS");

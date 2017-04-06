@@ -33,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -129,6 +130,7 @@ public class LogOptionsDialog extends Dialog implements
                 monthSelected = month;
                 day = dayOfMonth;
                 Date setTime=new Date(years-1900,monthSelected,day,hour,min,0);
+                TimeSet=true;
                 System.out.println(setTime.toString());
             }
         };
@@ -140,13 +142,13 @@ public class LogOptionsDialog extends Dialog implements
            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                hour = hourOfDay;
                min=minute;
-               TimeSet=true;
                dateDialog.show();
            }
        };
 
+       Calendar cal =Calendar.getInstance();
        timeDialog =  new TimePickerDialog(getContext(),timeListener,12,0,true);
-        dateDialog= new DatePickerDialog(getContext(),0,dateListener,2017,1,1);
+        dateDialog= new DatePickerDialog(getContext(),0,dateListener,cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
         //TODO:Override Yes button to update database
         yes.setOnClickListener(this);
         no.setOnClickListener(this);

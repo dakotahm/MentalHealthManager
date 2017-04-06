@@ -35,42 +35,42 @@ public class DisplayDataActivity extends AppCompatActivity implements LineChartF
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_data);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+       // setSupportActionBar(toolbar);
         FragmentManager fragManager = getSupportFragmentManager();
         final Intent intent=getIntent();
         userId= intent.getIntExtra("user",1);
 
 
-        FloatingActionButton addActivity = (FloatingActionButton) findViewById(R.id.AddActivity);
-        addActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent addActivityIntent = new Intent(DisplayDataActivity.this, DataCollectActivity.class);
-                addActivityIntent.putExtra("user",userId);
-                startActivity(addActivityIntent);
-            }
-        });
-
-        FloatingActionButton displayActivity = (FloatingActionButton) findViewById(R.id.DisplayActivity);
-        displayActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent displayIntent = new Intent(DisplayDataActivity.this, DisplayDataActivity.class);
-                displayIntent.putExtra("user",userId);
-                startActivity(displayIntent);
-            }
-        });
-
-        FloatingActionButton treatmentActivity = (FloatingActionButton) findViewById(R.id.TreatmentActivity);
-        treatmentActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent treatmentIntent = new Intent(DisplayDataActivity.this, TreatmentAidActivity.class);
-                startActivity(treatmentIntent);
-
-            }
-        });
+//        FloatingActionButton addActivity = (FloatingActionButton) findViewById(R.id.AddActivity);
+//        addActivity.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent addActivityIntent = new Intent(DisplayDataActivity.this, DataCollectActivity.class);
+//                addActivityIntent.putExtra("user",userId);
+//                startActivity(addActivityIntent);
+//            }
+//        });
+//
+//        FloatingActionButton displayActivity = (FloatingActionButton) findViewById(R.id.DisplayActivity);
+//        displayActivity.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent displayIntent = new Intent(DisplayDataActivity.this, DisplayDataActivity.class);
+//                displayIntent.putExtra("user",userId);
+//                startActivity(displayIntent);
+//            }
+//        });
+//
+//        FloatingActionButton treatmentActivity = (FloatingActionButton) findViewById(R.id.TreatmentActivity);
+//        treatmentActivity.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent treatmentIntent = new Intent(DisplayDataActivity.this, TreatmentAidActivity.class);
+//                startActivity(treatmentIntent);
+//
+//            }
+//        });
         Bundle bundle=new Bundle();
         bundle.putInt("user",userId);
         FragmentTransaction fragmentTransaction = fragManager.beginTransaction();
@@ -102,6 +102,14 @@ public class DisplayDataActivity extends AppCompatActivity implements LineChartF
             DatabaseHelper myDB=new DatabaseHelper(this);
             myDB.UpdateStatus(userId,0);
             Intent intent=new Intent(this,LoginActivity.class);
+            startActivity(intent);
+        }else if(id==R.id.DataCollectAction){
+            Intent addActivityIntent = new Intent(DisplayDataActivity.this, DataCollectActivity.class);
+            addActivityIntent.putExtra("user",userId);
+            startActivity(addActivityIntent);
+        }else if(id==R.id.GetMeasurableAction){
+            Intent intent=new Intent(this,addMeasurable.class);
+            intent.putExtra("user",userId);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

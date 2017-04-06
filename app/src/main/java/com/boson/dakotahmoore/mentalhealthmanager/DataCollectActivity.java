@@ -51,9 +51,9 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_collect);
         userId=getIntent().getIntExtra("user",1);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+       // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mydb= new DatabaseHelper(this);
-        setSupportActionBar(toolbar);
+       // setSupportActionBar(toolbar);
         fragmentList = (LinearLayout) findViewById(R.id.MasterLinear);
         mydb=new DatabaseHelper(this);
 
@@ -160,35 +160,35 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
 //        fragmentTransaction.add(fragmentList.getId(), newSlider);
 //        fragmentTransaction.commit();
 
-        final FloatingActionButton addActivity = (FloatingActionButton) findViewById(R.id.AddActivity);
-        addActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent addActivityIntent = new Intent(DataCollectActivity.this, DataCollectActivity.class);
-                addActivityIntent.putExtra("user",userId);
-                startActivity(addActivityIntent);
-            }
-        });
-
-        FloatingActionButton displayActivity = (FloatingActionButton) findViewById(R.id.DisplayActivity);
-        displayActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent displayIntent = new Intent(DataCollectActivity.this, DisplayDataActivity.class);
-                displayIntent.putExtra("user",userId);
-                startActivity(displayIntent);
-            }
-        });
-
-        FloatingActionButton treatmentActivity = (FloatingActionButton) findViewById(R.id.TreatmentActivity);
-        treatmentActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent treatmentIntent = new Intent(DataCollectActivity.this, TreatmentAidActivity.class);
-                startActivity(treatmentIntent);
-
-            }
-        });
+//        final FloatingActionButton addActivity = (FloatingActionButton) findViewById(R.id.AddActivity);
+//        addActivity.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent addActivityIntent = new Intent(DataCollectActivity.this, DataCollectActivity.class);
+//                addActivityIntent.putExtra("user",userId);
+//                startActivity(addActivityIntent);
+//            }
+//        });
+//
+//        FloatingActionButton displayActivity = (FloatingActionButton) findViewById(R.id.DisplayActivity);
+//        displayActivity.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent displayIntent = new Intent(DataCollectActivity.this, DisplayDataActivity.class);
+//                displayIntent.putExtra("user",userId);
+//                startActivity(displayIntent);
+//            }
+//        });
+//
+//        FloatingActionButton treatmentActivity = (FloatingActionButton) findViewById(R.id.TreatmentActivity);
+//        treatmentActivity.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent treatmentIntent = new Intent(DataCollectActivity.this, TreatmentAidActivity.class);
+//                startActivity(treatmentIntent);
+//
+//            }
+//        });
 
         //Jump to login when opening app
 //        if(firstrun)
@@ -224,6 +224,14 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
         }else if(id==R.id.LogOut){
             Intent intent=new Intent(this,LoginActivity.class);
             mydb.UpdateStatus(userId,0);
+            startActivity(intent);
+        }else if(id==R.id.DataDisplayAction){
+            Intent displayIntent = new Intent(DataCollectActivity.this, DisplayDataActivity.class);
+            displayIntent.putExtra("user",userId);
+            startActivity(displayIntent);
+        }else if(id==R.id.GetMeasurableAction){
+            Intent intent=new Intent(this,addMeasurable.class);
+            intent.putExtra("user",userId);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

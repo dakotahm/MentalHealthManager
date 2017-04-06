@@ -206,6 +206,10 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
         getMenuInflater().inflate(R.menu.menu_data_collect, menu);
         return true;
     }
+    @Override
+    public void onBackPressed(){
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

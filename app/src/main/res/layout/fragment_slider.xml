@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context="com.boson.dakotahmoore.mentalhealthmanager.SliderFragment"
-    android:padding="5dp">
+    android:padding="10dp">
 
 
     <TextView
@@ -37,5 +37,6 @@
         android:layout_toStartOf="@+id/button"
         android:textSize="12pt"
         android:id="@+id/SeekValue" />
+
 
 </RelativeLayout>

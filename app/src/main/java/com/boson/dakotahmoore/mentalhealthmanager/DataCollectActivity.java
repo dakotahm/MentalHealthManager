@@ -152,52 +152,7 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
             }
         };
         Volley.newRequestQueue(getApplicationContext()).add(postRequest);
-//        fragmentList = (LinearLayout) findViewById(R.id.CollectDataList);
-//        //Austin this is how you add fragments to the view
-//        //TODO: make this process dynamic from a query
-//        SliderFragment newSlider = new SliderFragment();
-//        FragmentTransaction fragmentTransaction = fragManager.beginTransaction();
-//        fragmentTransaction.add(fragmentList.getId(), newSlider);
-//        fragmentTransaction.commit();
 
-//        final FloatingActionButton addActivity = (FloatingActionButton) findViewById(R.id.AddActivity);
-//        addActivity.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent addActivityIntent = new Intent(DataCollectActivity.this, DataCollectActivity.class);
-//                addActivityIntent.putExtra("user",userId);
-//                startActivity(addActivityIntent);
-//            }
-//        });
-//
-//        FloatingActionButton displayActivity = (FloatingActionButton) findViewById(R.id.DisplayActivity);
-//        displayActivity.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent displayIntent = new Intent(DataCollectActivity.this, DisplayDataActivity.class);
-//                displayIntent.putExtra("user",userId);
-//                startActivity(displayIntent);
-//            }
-//        });
-//
-//        FloatingActionButton treatmentActivity = (FloatingActionButton) findViewById(R.id.TreatmentActivity);
-//        treatmentActivity.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent treatmentIntent = new Intent(DataCollectActivity.this, TreatmentAidActivity.class);
-//                startActivity(treatmentIntent);
-//
-//            }
-//        });
-
-        //Jump to login when opening app
-//        if(firstrun)
-//        {
-//            firstrun = false;
-//            Log.d("debugging","loading login activity");
-//            Intent myIntent = new Intent(this, LoginActivity.class);
-//            startActivity(myIntent);
-//        }
     }
 
     @Override
@@ -246,85 +201,5 @@ public class DataCollectActivity extends AppCompatActivity implements SliderFrag
 
     }
 
-    class GetMeasurables extends AsyncTask<Void,Void,String> {
 
-        @Override
-        protected String doInBackground(Void... params){
-            String requestURL = "http://mhm.bri.land/getMeasurables.php";
-
-            //String result= Glue.performPostCall(requestURL,postDataParams);
-
-            String test;
-            StringRequest postRequest = new StringRequest(Request.Method.POST, requestURL,
-                    new Response.Listener<String>() {
-
-                        @Override
-                        public void onResponse(String response) {
-                            try {
-                                //test=response.toString();
-                                int jsonResponse = new JSONObject(response).getInt("success");
-                                Log.d(tag,"The resposne was "+jsonResponse+"\n\n\n");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            error.printStackTrace();
-                        }
-                    }
-            ) {
-                @Override
-                protected Map<String, String> getParams()
-                {
-                    Map<String, String>  params = new HashMap<>();
-                    params.put("user_id", String.valueOf( userId));
-                    return params;
-                }
-            };
-            Volley.newRequestQueue(getApplicationContext()).add(postRequest);
-
-
-            return postRequest.toString();
-        }
-
-        @Override
-        protected void onPostExecute(String Result) {
-            JSONObject mainObject = null;
-            try {
-               Log.d(tag,Result);
-                mainObject = new JSONObject(Result);
-                JSONArray Measurables =mainObject.getJSONArray("measurables");
-                FragmentTransaction fragmentTransaction;
-                fragmentTransaction = fragManager.beginTransaction();
-                for(int i=0;i<Measurables.length();i++){
-                    JSONObject measurable=Measurables.getJSONObject(i);
-
-                    //Get Arguments from JSON
-                    Bundle args=new Bundle();
-                    args.putInt("max",measurable.getInt("max"));
-                    args.putInt("min",measurable.getInt("min"));
-                    args.putInt("id",measurable.getInt("id"));
-                    args.putString("name",measurable.getString("name"));
-                    args.putString("type",measurable.getString("type"));
-
-                    if(measurable.getString("type")=="value"){
-                        SliderFragment newSlider = new SliderFragment();
-                        newSlider.setArguments(args);
-                        fragmentTransaction.add(fragmentList.getId(), newSlider);
-                    }else{
-                        BooleanFragment newBool = new BooleanFragment();
-                        newBool.setArguments(args);
-                        fragmentTransaction.add(fragmentList.getId(), newBool);
-                    }
-
-                }
-                fragmentTransaction.commit();
-            } catch (JSONException e) {
-                Log.d(tag, "INVALID JSON");
-            }
-        }
-    }
 }

@@ -42,35 +42,7 @@ public class DisplayDataActivity extends AppCompatActivity implements LineChartF
         userId= intent.getIntExtra("user",1);
 
 
-//        FloatingActionButton addActivity = (FloatingActionButton) findViewById(R.id.AddActivity);
-//        addActivity.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent addActivityIntent = new Intent(DisplayDataActivity.this, DataCollectActivity.class);
-//                addActivityIntent.putExtra("user",userId);
-//                startActivity(addActivityIntent);
-//            }
-//        });
-//
-//        FloatingActionButton displayActivity = (FloatingActionButton) findViewById(R.id.DisplayActivity);
-//        displayActivity.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent displayIntent = new Intent(DisplayDataActivity.this, DisplayDataActivity.class);
-//                displayIntent.putExtra("user",userId);
-//                startActivity(displayIntent);
-//            }
-//        });
-//
-//        FloatingActionButton treatmentActivity = (FloatingActionButton) findViewById(R.id.TreatmentActivity);
-//        treatmentActivity.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent treatmentIntent = new Intent(DisplayDataActivity.this, TreatmentAidActivity.class);
-//                startActivity(treatmentIntent);
-//
-//            }
-//        });
+
         Bundle bundle=new Bundle();
         bundle.putInt("user",userId);
         FragmentTransaction fragmentTransaction = fragManager.beginTransaction();
